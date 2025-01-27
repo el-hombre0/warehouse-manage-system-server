@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: toy_shop_server
+  config:
+    import: db.yml

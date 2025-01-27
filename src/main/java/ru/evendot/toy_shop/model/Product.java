@@ -1,4 +1,4 @@
-package ru.evendot.toy_shop.Models;
+package ru.evendot.toy_shop.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -11,7 +11,7 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "toys")
+@Table(name = "product")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -1,4 +1,4 @@
-package ru.evendot.toy_shop.Models;
+package ru.evendot.toy_shop.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
