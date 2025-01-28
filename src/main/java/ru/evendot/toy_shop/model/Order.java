@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
+//import java.util.List;
 
 @Data
 @Entity
@@ -16,8 +16,8 @@ public class Order {
     private Double cost;
     private PayMethods payMethod;
 
-    @OneToMany
-    private List<Product> products;
+//    @OneToMany
+//    private List<Product> products;
 
 //    @OneToOne
 //    private User user;
@@ -27,6 +27,6 @@ public class Order {
 
     private Statuses status;
 
-    @OneToOne
-    private Address address;
+//    @OneToOne
+//    private Address address;
 }

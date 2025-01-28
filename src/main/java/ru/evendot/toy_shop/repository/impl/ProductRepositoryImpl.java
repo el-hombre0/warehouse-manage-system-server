@@ -12,7 +12,7 @@ import java.util.Optional;
 @Component
 public class ProductRepositoryImpl implements ProductRepository {
     private final JdbcTemplate jdbcTemplate;
-    private final String SELECT_ALL_FROM_TABLE = "SELECT * FROM PRODUCT";
+    private final String SELECT_ALL_FROM_TABLE = "SELECT * FROM products";
     public ProductRepositoryImpl(JdbcTemplate jdbcTemplate){
         this.jdbcTemplate = jdbcTemplate;
     }
