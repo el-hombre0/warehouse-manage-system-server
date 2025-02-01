@@ -2,10 +2,10 @@ package ru.evendot.toy_shop.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.evendot.toy_shop.model.request.CreateProduct;
 import ru.evendot.toy_shop.model.response.DataResponseProduct;
+import ru.evendot.toy_shop.model.response.DataResponseProductList;
 import ru.evendot.toy_shop.service.ProductService;
 
 @RestController
@@ -16,11 +16,20 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/get-products")
-    public ResponseEntity<DataResponseProduct> getAllProducts() {
+    public ResponseEntity<DataResponseProductList> getAllProducts() {
         return ResponseEntity.ok(
-                new DataResponseProduct(
+                new DataResponseProductList(
                         productService.getProducts()
 
+                )
+        );
+    }
+
+    @PostMapping("/product")
+    public ResponseEntity<DataResponseProduct> addProduct(@RequestBody CreateProduct product) {
+        return ResponseEntity.ok(
+                new DataResponseProduct(
+                        productService.save(product)
                 )
         );
     }

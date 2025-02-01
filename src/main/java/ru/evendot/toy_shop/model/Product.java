@@ -8,16 +8,20 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Table;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "products")
 public class Product {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String title;
-    private Integer article;
+    private Long article;
     private String description;
     private Double price;
     private String image;
