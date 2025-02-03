@@ -17,6 +17,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     private final String INSERT_INTO_TABLE = "INSERT INTO products (title, article, description, price, image) values (?, ?, ?, ?, ?)";
     private final String SELECT_FROM_TABLE_WHERE_ARTICLE = "SELECT * FROM products WHERE article = ?";
     private final String SELECT_EXISTS_FROM_TABLE_WHERE_ARTICLE = "SELECT EXISTS(SELECT * FROM products WHERE article = ? )";
+    private final String DELETE_BY_ARTICLE = "DELETE FROM products WHERE article = ?";
 
     public ProductRepositoryImpl(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
@@ -49,5 +50,10 @@ public class ProductRepositoryImpl implements ProductRepository {
 
     public Boolean existsByArticle(Long article) {
         return jdbcTemplate.queryForObject(SELECT_EXISTS_FROM_TABLE_WHERE_ARTICLE, Boolean.class, article);
+    }
+
+    @Override
+    public int deleteByArticle(Long article) {
+        return jdbcTemplate.update(DELETE_BY_ARTICLE, article);
     }
 }

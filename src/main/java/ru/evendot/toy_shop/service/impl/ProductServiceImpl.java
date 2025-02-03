@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.evendot.toy_shop.exception.CustomException;
 import ru.evendot.toy_shop.model.Product;
 import ru.evendot.toy_shop.model.request.CreateProduct;
+import ru.evendot.toy_shop.model.request.DeleteProduct;
 import ru.evendot.toy_shop.repository.impl.ProductRepositoryImpl;
 import ru.evendot.toy_shop.service.ProductService;
 
@@ -30,6 +31,15 @@ public class ProductServiceImpl implements ProductService {
             return productRepositoryImpl.save(product).orElseThrow();
         } else {
             throw new CustomException("PRODUCT_ALREADY_EXISTS", "Продукт уже существует");
+        }
+    }
+
+    public int deleteByArticle(Long article){
+        if(productRepositoryImpl.existsByArticle(article)){
+            return productRepositoryImpl.deleteByArticle(article);
+        }
+        else {
+            throw new CustomException("PRODUCT_DOES_NOT_EXIST", "Продукт не существует");
         }
     }
 }

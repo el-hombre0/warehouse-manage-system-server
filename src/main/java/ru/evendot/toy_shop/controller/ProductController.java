@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.evendot.toy_shop.model.request.CreateProduct;
+import ru.evendot.toy_shop.model.request.DeleteProduct;
+import ru.evendot.toy_shop.model.response.DataResponse;
 import ru.evendot.toy_shop.model.response.DataResponseProduct;
 import ru.evendot.toy_shop.model.response.DataResponseProductList;
 import ru.evendot.toy_shop.service.ProductService;
@@ -16,21 +18,31 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/get-products")
-    public ResponseEntity<DataResponseProductList> getAllProducts() {
+    public ResponseEntity<DataResponse> getAllProducts() {
         return ResponseEntity.ok(
-                new DataResponseProductList(
-                        productService.getProducts()
+                new DataResponse(
+                        new DataResponseProductList(
+                                productService.getProducts()
 
+                        )
                 )
         );
     }
 
     @PostMapping("/product")
-    public ResponseEntity<DataResponseProduct> addProduct(@RequestBody CreateProduct product) {
+    public ResponseEntity<DataResponse> addProduct(@RequestBody CreateProduct product) {
         return ResponseEntity.ok(
-                new DataResponseProduct(
-                        productService.save(product)
+                new DataResponse(
+                        new DataResponseProduct(
+                                productService.save(product)
+                        )
                 )
+
         );
+    }
+
+    @DeleteMapping("/product")
+    public void deleteProduct(@RequestBody DeleteProduct product){
+        productService.deleteByArticle(product.getArticle());
     }
 }
