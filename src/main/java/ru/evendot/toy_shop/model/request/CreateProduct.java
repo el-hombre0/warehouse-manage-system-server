@@ -11,4 +11,6 @@ public class CreateProduct {
     private String description;
     private Double price;
     private String image;
+    private Boolean inStock;
+    private Integer sale;
 }

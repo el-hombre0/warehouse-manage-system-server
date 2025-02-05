@@ -10,6 +10,8 @@ import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @Data
 @Entity
 @NoArgsConstructor
@@ -25,4 +27,8 @@ public class Product {
     private String description;
     private Double price;
     private String image;
+    private Boolean inStock;
+    private Integer sale;
+    private Timestamp timeInsert;
+    private Timestamp timeUpdate;
 }

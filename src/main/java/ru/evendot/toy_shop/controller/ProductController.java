@@ -42,7 +42,18 @@ public class ProductController {
     }
 
     @DeleteMapping("/product")
-    public void deleteProduct(@RequestBody DeleteProduct product){
+    public void deleteProduct(@RequestBody DeleteProduct product) {
         productService.deleteByArticle(product.getArticle());
+    }
+
+    @PutMapping("/product")
+    public ResponseEntity<DataResponse> updateProduct(@RequestBody CreateProduct product) {
+        return ResponseEntity.ok(
+                new DataResponse(
+                        new DataResponseProduct(
+                                productService.updateProduct(product).getArticle()
+                        )
+                )
+        );
     }
 }

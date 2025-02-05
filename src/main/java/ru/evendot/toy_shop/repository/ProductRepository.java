@@ -15,5 +15,7 @@ public interface ProductRepository {
 
     Boolean existsByArticle(Long article);
 
-    int deleteByArticle(Long article);
+    void deleteByArticle(Long article);
+
+    Optional<Long> updateByArticle(Product product);
 }
