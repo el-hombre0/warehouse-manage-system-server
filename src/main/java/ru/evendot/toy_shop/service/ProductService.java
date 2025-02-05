@@ -10,6 +10,8 @@ import java.util.List;
 public interface ProductService {
     List<Product> getProducts();
 
+    Product getProduct(Long article);
+
     Long save(CreateProduct product) throws CustomException;
 
     void deleteByArticle(Long article);

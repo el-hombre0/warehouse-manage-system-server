@@ -23,6 +23,11 @@ public class ProductServiceImpl implements ProductService {
         return productRepositoryImpl.findAll().orElseThrow();
     }
 
+    public Product getProduct(Long article) {
+        return productRepositoryImpl.findByArticle(article).orElseThrow(
+                () -> new ResourceNotFoundException("Product with article:" + article.toString() + "doesn't exist."));
+    }
+
     public Long save(CreateProduct createProduct) {
         if (!productRepositoryImpl.existsByArticle(createProduct.getArticle())) {
             Product product = new Product();
@@ -50,7 +55,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public DataResponseProduct updateProduct(CreateProduct product) {
-        Optional<Product> optionalProduct = productRepositoryImpl.findByArticle(product);
+        Optional<Product> optionalProduct = productRepositoryImpl.findByArticle(product.getArticle());
         Product putProduct = optionalProduct.orElseThrow(() -> new ResourceNotFoundException("Product with article:" + product.getArticle().toString() + "doesn't exist."));
         putProduct.setArticle(product.getArticle());
         putProduct.setDescription(product.getDescription());

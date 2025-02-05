@@ -29,7 +29,7 @@ class RegressTests extends BaseTest {
 
         List<Product> products = given()
                 .when()
-                .get("/product-service/get-products")
+                .get("/product-service/product")
                 .then()
                 .log().all()
                 .extract().body().jsonPath().getList("data.products", Product.class);

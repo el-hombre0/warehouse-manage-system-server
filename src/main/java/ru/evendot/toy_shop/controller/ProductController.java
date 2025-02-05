@@ -7,6 +7,7 @@ import ru.evendot.toy_shop.model.request.CreateProduct;
 import ru.evendot.toy_shop.model.request.DeleteProduct;
 import ru.evendot.toy_shop.model.response.DataResponse;
 import ru.evendot.toy_shop.model.response.DataResponseProduct;
+import ru.evendot.toy_shop.model.response.DataResponseProductFull;
 import ru.evendot.toy_shop.model.response.DataResponseProductList;
 import ru.evendot.toy_shop.service.ProductService;
 
@@ -17,13 +18,24 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @GetMapping("/get-products")
+    @GetMapping("/product")
     public ResponseEntity<DataResponse> getAllProducts() {
         return ResponseEntity.ok(
                 new DataResponse(
                         new DataResponseProductList(
                                 productService.getProducts()
 
+                        )
+                )
+        );
+    }
+
+    @GetMapping("/product/{article}")
+    public ResponseEntity<DataResponse> getProduct(@PathVariable Long article){
+        return ResponseEntity.ok(
+                new DataResponse(
+                        new DataResponseProductFull(
+                                productService.getProduct(article)
                         )
                 )
         );

@@ -1,7 +1,6 @@
 package ru.evendot.toy_shop.repository;
 
 import ru.evendot.toy_shop.model.Product;
-import ru.evendot.toy_shop.model.request.CreateProduct;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +10,7 @@ public interface ProductRepository {
 
     Optional<Long> save(Product product);
 
-    Optional<Product> findByArticle(CreateProduct product);
+    Optional<Product> findByArticle(Long article);
 
     Boolean existsByArticle(Long article);
 

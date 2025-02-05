@@ -4,7 +4,6 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.evendot.toy_shop.model.Product;
-import ru.evendot.toy_shop.model.request.CreateProduct;
 import ru.evendot.toy_shop.repository.ProductRepository;
 
 import java.util.List;
@@ -43,11 +42,11 @@ public class ProductRepositoryImpl implements ProductRepository {
         return Optional.of(product.getArticle());
     }
 
-    public Optional<Product> findByArticle(CreateProduct product) {
+    public Optional<Product> findByArticle(Long article) {
         return Optional.ofNullable(jdbcTemplate.queryForObject(
                 SELECT_FROM_TABLE_WHERE_ARTICLE,
                 new BeanPropertyRowMapper<>(Product.class),
-                product.getArticle())
+                article)
         );
     }
 
