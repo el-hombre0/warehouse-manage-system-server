@@ -1,10 +1,8 @@
 package ru.evendot.toy_shop.api.response;
 
 
-public class CreateProductResponse {
-    private Long article;
+import ru.evendot.toy_shop.model.response.DataResponseProduct;
 
-    public Long getArticle() {
-        return article;
-    }
+public class CreateProductResponse extends DataResponseProduct {
+
 }

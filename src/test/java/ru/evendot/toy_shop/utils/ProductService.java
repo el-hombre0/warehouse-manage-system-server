@@ -1,6 +1,7 @@
 package ru.evendot.toy_shop.utils;
 
 import ru.evendot.toy_shop.api.response.CreateProductResponse;
+import ru.evendot.toy_shop.api.response.GetProductResponse;
 import ru.evendot.toy_shop.enums.StringConst;
 import ru.evendot.toy_shop.model.request.CreateProduct;
 
@@ -15,5 +16,11 @@ public class ProductService {
                 .then().log().all()
                 .extract().body().jsonPath().getObject("data", CreateProductResponse.class);
         return response.getArticle();
+    }
+
+    public static GetProductResponse getProduct(Long article){
+        return given().when().get("/product-service/product/" + article.toString())
+                .then().log().all()
+                .extract().body().jsonPath().getObject("data.product", GetProductResponse.class);
     }
 }
