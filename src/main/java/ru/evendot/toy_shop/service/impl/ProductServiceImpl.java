@@ -5,8 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.evendot.toy_shop.exception.CustomException;
 import ru.evendot.toy_shop.exception.ResourceNotFoundException;
 import ru.evendot.toy_shop.model.Product;
-import ru.evendot.toy_shop.model.request.CreateProduct;
-import ru.evendot.toy_shop.model.response.DataResponseProduct;
+import ru.evendot.toy_shop.model.request.product.CreateProduct;
+import ru.evendot.toy_shop.model.response.product.DataResponseProduct;
 import ru.evendot.toy_shop.repository.impl.ProductRepositoryImpl;
 import ru.evendot.toy_shop.service.ProductService;
 

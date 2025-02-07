@@ -3,12 +3,12 @@ package ru.evendot.toy_shop.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.evendot.toy_shop.model.request.CreateProduct;
-import ru.evendot.toy_shop.model.request.DeleteProduct;
+import ru.evendot.toy_shop.model.request.product.CreateProduct;
+import ru.evendot.toy_shop.model.request.product.DeleteProduct;
 import ru.evendot.toy_shop.model.response.DataResponse;
-import ru.evendot.toy_shop.model.response.DataResponseProduct;
-import ru.evendot.toy_shop.model.response.DataResponseProductFull;
-import ru.evendot.toy_shop.model.response.DataResponseProductList;
+import ru.evendot.toy_shop.model.response.product.DataResponseProduct;
+import ru.evendot.toy_shop.model.response.product.DataResponseProductFull;
+import ru.evendot.toy_shop.model.response.product.DataResponseProductList;
 import ru.evendot.toy_shop.service.ProductService;
 
 @RestController

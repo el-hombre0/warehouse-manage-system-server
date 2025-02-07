@@ -5,12 +5,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.evendot.toy_shop.api.response.CreateProductResponse;
-import ru.evendot.toy_shop.api.response.GetProductResponse;
+import ru.evendot.toy_shop.api.response.product.CreateProductResponse;
+import ru.evendot.toy_shop.api.response.product.GetProductResponse;
 import ru.evendot.toy_shop.enums.StringConst;
 import ru.evendot.toy_shop.model.Product;
-import ru.evendot.toy_shop.model.request.CreateProduct;
-import ru.evendot.toy_shop.model.request.DeleteProduct;
+import ru.evendot.toy_shop.model.request.product.CreateProduct;
+import ru.evendot.toy_shop.model.request.product.DeleteProduct;
 import ru.evendot.toy_shop.utils.ProductService;
 import ru.evendot.toy_shop.utils.Specifications;
 
@@ -65,6 +65,7 @@ class RegressTests extends BaseTest {
 
         Assertions.assertEquals(article, product.getArticle());
 
+        ProductService.deleteProduct(article);
     }
 
     @Test
@@ -79,6 +80,9 @@ class RegressTests extends BaseTest {
                 .extract().body().jsonPath().getObject("data", CreateProductResponse.class);
 
         Assertions.assertEquals(createProduct.getArticle(), response.getArticle());
+
+        ProductService.deleteProduct(createProduct.getArticle());
+
     }
 
     @Test
@@ -95,6 +99,7 @@ class RegressTests extends BaseTest {
         GetProductResponse newGottenProduct = ProductService.getProduct(product.getArticle());
         Assertions.assertEquals(gottenProduct.getDescription(), newGottenProduct.getDescription());
         Assertions.assertEquals(gottenProduct.getInStock(), newGottenProduct.getInStock());
+        ProductService.deleteProduct(article);
 
 
     }

@@ -2,8 +2,8 @@ package ru.evendot.toy_shop.service;
 
 import ru.evendot.toy_shop.exception.CustomException;
 import ru.evendot.toy_shop.model.Product;
-import ru.evendot.toy_shop.model.request.CreateProduct;
-import ru.evendot.toy_shop.model.response.DataResponseProduct;
+import ru.evendot.toy_shop.model.request.product.CreateProduct;
+import ru.evendot.toy_shop.model.response.product.DataResponseProduct;
 
 import java.util.List;
 

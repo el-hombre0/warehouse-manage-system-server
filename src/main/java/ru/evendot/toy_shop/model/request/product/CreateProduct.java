@@ -1,4 +1,4 @@
-package ru.evendot.toy_shop.model.request;
+package ru.evendot.toy_shop.model.request.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

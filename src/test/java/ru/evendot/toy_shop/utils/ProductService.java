@@ -1,9 +1,10 @@
 package ru.evendot.toy_shop.utils;
 
-import ru.evendot.toy_shop.api.response.CreateProductResponse;
-import ru.evendot.toy_shop.api.response.GetProductResponse;
+import ru.evendot.toy_shop.api.response.product.CreateProductResponse;
+import ru.evendot.toy_shop.api.response.product.GetProductResponse;
 import ru.evendot.toy_shop.enums.StringConst;
-import ru.evendot.toy_shop.model.request.CreateProduct;
+import ru.evendot.toy_shop.model.request.product.CreateProduct;
+import ru.evendot.toy_shop.model.request.product.DeleteProduct;
 
 import static io.restassured.RestAssured.given;
 
@@ -22,5 +23,10 @@ public class ProductService {
         return given().when().get("/product-service/product/" + article.toString())
                 .then().log().all()
                 .extract().body().jsonPath().getObject("data.product", GetProductResponse.class);
+    }
+
+    public static void deleteProduct(Long article){
+        DeleteProduct product = new DeleteProduct(article);
+        given().body(product).when().delete("/product-service/product").then().log().all();
     }
 }
