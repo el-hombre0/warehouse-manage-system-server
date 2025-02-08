@@ -3,8 +3,8 @@ package ru.evendot.toy_shop.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-//import java.util.List;
+import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @Entity
@@ -16,17 +16,18 @@ public class Order {
     private Double cost;
     private PayMethods payMethod;
 
-//    @OneToMany
-//    private List<Product> products;
+    @OneToMany
+    private List<Product> products;
 
 //    @OneToOne
 //    private User user;
 
     private String comment;
-    private LocalDateTime dateTime;
+    private Timestamp timeCreation;
+
 
     private Statuses status;
 
-//    @OneToOne
-//    private Address address;
+    @OneToOne
+    private Address address;
 }
