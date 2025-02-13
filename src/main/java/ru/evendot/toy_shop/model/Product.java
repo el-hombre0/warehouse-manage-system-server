@@ -1,16 +1,12 @@
 package ru.evendot.toy_shop.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @Entity
@@ -19,6 +15,7 @@ import java.sql.Timestamp;
 public class Product {
 
     @Id
+    @Column(name = "product_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -26,9 +23,14 @@ public class Product {
     private Long article;
     private String description;
     private Double price;
-    private String image;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> image;
+
     private Boolean inStock;
     private Integer sale;
     private Timestamp timeInsert;
     private Timestamp timeUpdate;
+    private int inventory;
+    private Category category;
 }
