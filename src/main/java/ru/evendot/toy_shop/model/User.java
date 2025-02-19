@@ -16,7 +16,7 @@ public class User {
     private String phoneNumber;
     private String email;
 
-//    @OneToOne
-//    @JoinColumn(name = "")
-//    private Address userAddress;
+    @OneToOne
+    @JoinColumn(name = "")
+    private Address userAddress;
 }

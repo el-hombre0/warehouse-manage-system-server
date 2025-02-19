@@ -9,7 +9,7 @@ import ru.evendot.toy_shop.api.response.product.CreateProductResponse;
 import ru.evendot.toy_shop.api.response.product.GetProductResponse;
 import ru.evendot.toy_shop.enums.StringConst;
 import ru.evendot.toy_shop.model.Product;
-import ru.evendot.toy_shop.model.request.product.CreateProduct;
+import ru.evendot.toy_shop.model.request.product.CreateProductRequest;
 import ru.evendot.toy_shop.model.request.product.DeleteProduct;
 import ru.evendot.toy_shop.utils.ProductService;
 import ru.evendot.toy_shop.utils.Specifications;
@@ -73,7 +73,7 @@ class RegressTests extends BaseTest {
     @DisplayName("Добавление продукта")
     public void addProduct() {
         Specifications.installSpecification(Specifications.requestSpec(StringConst.BASE_URL.toString()), Specifications.responseSpec(200));
-        CreateProduct createProduct = new CreateProduct("Плюшевая лисичка", 748312L, "Рыжая лисичка, стоящая на задних лапках", 12.50, "/red-fox-standing.png", true, 15);
+        CreateProductRequest createProduct = new CreateProductRequest("Плюшевая лисичка", 748312L, "Рыжая лисичка, стоящая на задних лапках", 12.50, "/red-fox-standing.png", true, 15);
         CreateProductResponse response = given().body(createProduct)
                 .when().post("/product-service/product")
                 .then().log().all()

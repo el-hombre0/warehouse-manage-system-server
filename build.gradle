@@ -38,6 +38,7 @@ dependencies {
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.18.2'
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.18.2'
 	implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.18.2'
+	implementation group: 'com.fasterxml.uuid', name: 'java-uuid-generator', version: '5.1.0'
 }
 
 tasks.named('test') {

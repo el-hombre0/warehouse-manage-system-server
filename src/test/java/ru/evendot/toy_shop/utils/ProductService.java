@@ -3,16 +3,16 @@ package ru.evendot.toy_shop.utils;
 import ru.evendot.toy_shop.api.response.product.CreateProductResponse;
 import ru.evendot.toy_shop.api.response.product.GetProductResponse;
 import ru.evendot.toy_shop.enums.StringConst;
-import ru.evendot.toy_shop.model.request.product.CreateProduct;
+import ru.evendot.toy_shop.model.request.product.CreateProductRequest;
 import ru.evendot.toy_shop.model.request.product.DeleteProduct;
 
 import static io.restassured.RestAssured.given;
 
 public class ProductService {
     public static Long createProduct() {
-        CreateProduct createProduct = new CreateProduct("Плюшевая лисичка", 748312L, "Рыжая лисичка, стоящая на задних лапках", 12.50, "/red-fox-standing.png", true, 15);
+        CreateProductRequest createProductRequest = new CreateProductRequest("Плюшевая лисичка", 748312L, "Рыжая лисичка, стоящая на задних лапках", 12.50, "/red-fox-standing.png", true, 15);
         Specifications.installSpecification(Specifications.requestSpec(StringConst.BASE_URL.toString()), Specifications.responseSpec(200));
-        CreateProductResponse response = given().body(createProduct)
+        CreateProductResponse response = given().body(createProductRequest)
                 .when().post("/product-service/product")
                 .then().log().all()
                 .extract().body().jsonPath().getObject("data", CreateProductResponse.class);

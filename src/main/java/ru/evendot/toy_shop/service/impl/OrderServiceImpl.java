@@ -1,14 +1,19 @@
 package ru.evendot.toy_shop.service.impl;
 
+import com.fasterxml.uuid.Generators;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.evendot.toy_shop.exception.CustomException;
 import ru.evendot.toy_shop.exception.ResourceNotFoundException;
 import ru.evendot.toy_shop.model.Order;
+import ru.evendot.toy_shop.model.Statuses;
+import ru.evendot.toy_shop.model.request.order.CreateOrder;
 import ru.evendot.toy_shop.repository.impl.OrderRepositoryImpl;
 import ru.evendot.toy_shop.service.OrderService;
 
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -20,11 +25,26 @@ public class OrderServiceImpl implements OrderService {
         return orderRepositoryImpl.findAll().orElseThrow();
     }
 
-//    @Override
-//    public Order getOrder(Long id) {
-//        return orderRepositoryImpl.findById(id).orElseThrow(
-//                () -> new ResourceNotFoundException("Order with article:" + id.toString() + "doesn't exist."));
-//    }
+    @Override
+    public Order getOrder(UUID uuid) {
+        return orderRepositoryImpl.findByUUID(uuid).orElseThrow(
+                () -> new ResourceNotFoundException("Order with article:" + uuid.toString() + "doesn't exist."));
+    }
+
+    @Override
+    public Long save(CreateOrder createOrder) throws CustomException {
+        Order order = new Order();
+        order.setCost(createOrder.getCost());
+        order.setUuid(Generators.timeBasedGenerator().generate());
+        order.setPayMethod(createOrder.getPayMethod());
+        order.setOrderProducts(null);
+        order.setUser(createOrder.getUser());
+        order.setComment(createOrder.getComment());
+        order.setTimeCreation(new Timestamp(System.currentTimeMillis()));
+        order.setStatus(Statuses.ACCEPTED);
+        order.setAddress(createOrder.getAddress());
+        return orderRepositoryImpl.save(order).orElseThrow();
+    }
 
 //    @Override
 //    public Long save(CreateOrder order) throws CustomException {

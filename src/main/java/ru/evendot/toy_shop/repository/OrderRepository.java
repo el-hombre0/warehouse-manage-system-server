@@ -5,14 +5,15 @@ import ru.evendot.toy_shop.model.Order;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public interface OrderRepository {
     Optional<List<Order>> findAll();
 
-//    Optional<Long> save(Order order);
+    Optional<Long> save(Order order);
 
-//    Optional<Order> findById(Long id);
+    Optional<Order> findByUUID(UUID uuid);
 
 //    Boolean existsById(Long id);
 

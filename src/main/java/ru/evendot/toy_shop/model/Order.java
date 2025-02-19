@@ -4,23 +4,29 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @Entity
 @Table(name = "orders")
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "order_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Double cost;
+    private UUID uuid;
     private PayMethods payMethod;
 
-    @OneToMany
-    private List<Product> products;
+    @OneToMany(mappedBy = "pk.order")
+    private List<OrderProduct> orderProducts = new ArrayList<>();
 
-//    @OneToOne
-//    private User user;
+
+    @OneToOne
+    @JoinColumn(name = "userId")
+    private User user;
 
     private String comment;
     private Timestamp timeCreation;
@@ -29,5 +35,6 @@ public class Order {
     private Statuses status;
 
     @OneToOne
+    @JoinColumn(name = "addressId")
     private Address address;
 }

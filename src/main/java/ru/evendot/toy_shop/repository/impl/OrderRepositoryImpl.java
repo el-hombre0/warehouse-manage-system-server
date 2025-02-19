@@ -9,6 +9,7 @@ import ru.evendot.toy_shop.repository.SQL_Queries;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
 public class OrderRepositoryImpl implements OrderRepository {
@@ -23,15 +24,29 @@ public class OrderRepositoryImpl implements OrderRepository {
         return Optional.of(jdbcTemplate.query(SQL_Queries.SELECT_ALL.toString(), new BeanPropertyRowMapper<>(Order.class)));
     }
 
-//    @Override
-//    public Optional<Long> save(Order order) {
-//        return Optional.empty();
-//    }
+    @Override
+    public Optional<Long> save(Order order) {
+        jdbcTemplate.update(SQL_Queries.INSERT_INTO_TABLE.toString(),
+                order.getCost(),
+                order.getUuid(),
+                order.getPayMethod(),
+                order.getOrderProducts(),
+                order.getUser(),
+                order.getComment(),
+                order.getTimeCreation(),
+                order.getStatus(),
+                order.getAddress());
+        return Optional.of(order.getId());
+    }
 
-//    @Override
-//    public Optional<Order> findById(Long id) {
-//        return Optional.empty();
-//    }
+    @Override
+    public Optional<Order> findByUUID(UUID uuid) {
+        return Optional.ofNullable(jdbcTemplate.queryForObject(
+                SQL_Queries.SELECT_FROM_TABLE_WHERE_ID.toString(),
+                new BeanPropertyRowMapper<>(Order.class),
+                uuid)
+        );
+    }
 
 //    @Override
 //    public Boolean existsById(Long id) {

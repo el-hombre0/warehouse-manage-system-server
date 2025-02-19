@@ -1,20 +1,26 @@
 package ru.evendot.toy_shop.service;
 
-import ru.evendot.toy_shop.exception.CustomException;
 import ru.evendot.toy_shop.model.Product;
-import ru.evendot.toy_shop.model.request.product.CreateProduct;
-import ru.evendot.toy_shop.model.response.product.DataResponseProduct;
+import ru.evendot.toy_shop.model.request.product.CreateProductRequest;
+import ru.evendot.toy_shop.model.request.product.UpdateProductRequest;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductService {
     List<Product> getProducts();
 
+    List<Product> getProductByCategory(String category);
+
     Product getProduct(Long article);
 
-    Long save(CreateProduct product) throws CustomException;
+    Product getProductById(Long productId);
 
-    void deleteByArticle(Long article);
+    Product addProduct(CreateProductRequest product);
 
-    DataResponseProduct updateProduct(CreateProduct product);
+    void deleteProductByArticle(Long article);
+
+    void deleteProductById(Long productId);
+
+    Product updateProduct(UpdateProductRequest product);
 }

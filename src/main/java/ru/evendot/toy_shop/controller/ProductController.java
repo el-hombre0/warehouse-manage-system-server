@@ -3,8 +3,9 @@ package ru.evendot.toy_shop.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.evendot.toy_shop.model.request.product.CreateProduct;
+import ru.evendot.toy_shop.model.request.product.CreateProductRequest;
 import ru.evendot.toy_shop.model.request.product.DeleteProduct;
+import ru.evendot.toy_shop.model.request.product.UpdateProductRequest;
 import ru.evendot.toy_shop.model.response.DataResponse;
 import ru.evendot.toy_shop.model.response.product.DataResponseProduct;
 import ru.evendot.toy_shop.model.response.product.DataResponseProductFull;
@@ -30,23 +31,23 @@ public class ProductController {
         );
     }
 
-    @GetMapping("/product/{article}")
-    public ResponseEntity<DataResponse> getProduct(@PathVariable Long article){
+    @GetMapping("/product/{id}")
+    public ResponseEntity<DataResponse> getProduct(@PathVariable Long id){
         return ResponseEntity.ok(
                 new DataResponse(
                         new DataResponseProductFull(
-                                productService.getProduct(article)
+                                productService.getProductById(id)
                         )
                 )
         );
     }
 
     @PostMapping("/product")
-    public ResponseEntity<DataResponse> addProduct(@RequestBody CreateProduct product) {
+    public ResponseEntity<DataResponse> addProduct(@RequestBody CreateProductRequest product) {
         return ResponseEntity.ok(
                 new DataResponse(
-                        new DataResponseProduct(
-                                productService.save(product)
+                        new DataResponseProductFull(
+                                productService.addProduct(product)
                         )
                 )
 
@@ -55,15 +56,15 @@ public class ProductController {
 
     @DeleteMapping("/product")
     public void deleteProduct(@RequestBody DeleteProduct product) {
-        productService.deleteByArticle(product.getArticle());
+        productService.deleteProductByArticle(product.getArticle());
     }
 
-    @PutMapping("/product")
-    public ResponseEntity<DataResponse> updateProduct(@RequestBody CreateProduct product) {
+    @PutMapping("/product/{id}")
+    public ResponseEntity<DataResponse> updateProduct(@RequestBody UpdateProductRequest product ) {
         return ResponseEntity.ok(
                 new DataResponse(
-                        new DataResponseProduct(
-                                productService.updateProduct(product).getArticle()
+                        new DataResponseProductFull(
+                                productService.updateProduct(product)
                         )
                 )
         );
