@@ -26,10 +26,10 @@ public class ProductServiceImpl implements ProductService {
         return productRepositoryImpl.findAll();
     }
 
-    @Override
-    public List<Product> getProductByCategory(String category) {
-        return productRepositoryImpl.findByCategory(category);
-    }
+//    @Override
+//    public List<Product> getProductByCategory(String category) {
+//        return productRepositoryImpl.findByCategory(category);
+//    }
 
     public Product getProduct(Long article) {
         return productRepositoryImpl.findByArticle(article).orElseThrow(
@@ -38,23 +38,30 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getProductById(Long id) {
-        return productRepositoryImpl.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found"));
+        return productRepositoryImpl.findById(id).orElseThrow(() -> new ResourceNotFoundException("Product not found."));
     }
 
     @Override
     public Product addProduct(CreateProductRequest request) {
         Product addedProduct;
-        if(categoryRepositoryImpl.findByName(request.getCategory().getName()).isEmpty()){
-            Category newCategory = new Category(request.getCategory().getName());
-            categoryRepositoryImpl.save(newCategory);
-            addedProduct = createProduct(request, newCategory);
-            productRepositoryImpl.save(addedProduct);
-        }
-        else {
-            addedProduct = createProduct(request, request.getCategory());
-            productRepositoryImpl.save(addedProduct);
-        }
-        return addedProduct;
+        addedProduct = createProduct(request);
+        productRepositoryImpl.save(addedProduct);
+        return productRepositoryImpl.findByArticle(request.getArticle()).orElseThrow(() -> new ResourceNotFoundException("Product not found."));
+    }
+//    @Override
+//    public Product addProduct(CreateProductRequest request) {
+//        Product addedProduct;
+//        if(categoryRepositoryImpl.findByName(request.getCategory().getName()).isEmpty()){
+//            Category newCategory = new Category(request.getCategory().getName());
+//            categoryRepositoryImpl.save(newCategory);
+//            addedProduct = createProduct(request, newCategory);
+//            productRepositoryImpl.save(addedProduct);
+//        }
+//        else {
+//            addedProduct = createProduct(request, request.getCategory());
+//            productRepositoryImpl.save(addedProduct);
+//        }
+//        return addedProduct;
 
 //        Category category = Optional.ofNullable(categoryRepositoryImpl.findByName(request.getCategory().getName())).orElseGet(()->{
 //            Category newCategory = new Category(request.getCategory().getName());
@@ -80,9 +87,24 @@ public class ProductServiceImpl implements ProductService {
 //                        request.getCategory()
 //                );
 //            }
-    }
+//    }
 
-    private Product createProduct(CreateProductRequest request, Category category){
+//    private Product createProduct(CreateProductRequest request, Category category){
+//        Timestamp creationTime = new Timestamp(System.currentTimeMillis());
+//        return new Product(
+//                request.getTitle(),
+//                request.getArticle(),
+//                request.getDescription(),
+//                request.getPrice(),
+//                request.getInStock(),
+//                request.getSale(),
+//                creationTime,
+//                creationTime,
+//                request.getInventory(),
+//                category
+//        );
+//    }
+    private Product createProduct(CreateProductRequest request){
         Timestamp creationTime = new Timestamp(System.currentTimeMillis());
         return new Product(
                 request.getTitle(),
@@ -93,8 +115,7 @@ public class ProductServiceImpl implements ProductService {
                 request.getSale(),
                 creationTime,
                 creationTime,
-                request.getInventory(),
-                category
+                request.getInventory()
         );
     }
 
@@ -109,21 +130,25 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void deleteProductById(Long id){
-        productRepositoryImpl.findById(id).ifPresentOrElse(productRepositoryImpl :: deleteById,
-                () -> {throw new ResourceNotFoundException("Product not found");});
+        Optional<Product> optionalProduct = productRepositoryImpl.findById(id);
+        Product existingProduct = optionalProduct.orElseThrow(
+                () -> new ResourceNotFoundException("Product with id:" + id + "doesn't exist."));
+        productRepositoryImpl.deleteById(existingProduct);
+//        productRepositoryImpl.findById(id).ifPresentOrElse(productRepositoryImpl :: deleteById,
+//                () -> { throw new ResourceNotFoundException("Product not found.");});
     }
 
     @Override
-    public Product updateProduct(UpdateProductRequest request) {
+    public Product updateProduct(Long id, UpdateProductRequest request) {
 //        return productRepositoryImpl.findById(request.getId())
 //                .map(existingProduct -> updateExistingProduct(existingProduct, request))
 //                .map(productRepositoryImpl :: save)
 //                .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
-            Optional<Product> optionalProduct = productRepositoryImpl.findById(request.getId());
+            Optional<Product> optionalProduct = productRepositoryImpl.findById(id);
             Product existingProduct = optionalProduct.orElseThrow(
-                    () -> new ResourceNotFoundException("Product with id:" + request.getId() + "doesn't exist."));
+                    () -> new ResourceNotFoundException("Product with id:" + id + "doesn't exist."));
             Product savedProduct = updateExistingProduct(existingProduct, request);
-            productRepositoryImpl.save(savedProduct);
+            productRepositoryImpl.updateById(id, savedProduct);
             return savedProduct;
 //            putProduct.setArticle(product.getArticle());
 //            putProduct.setDescription(product.getDescription());
@@ -138,6 +163,23 @@ public class ProductServiceImpl implements ProductService {
 
     }
 
+//    private Product updateExistingProduct(Product existingProduct, UpdateProductRequest request){
+//        existingProduct.setTitle(request.getTitle());
+//        existingProduct.setArticle(request.getArticle());
+//        existingProduct.setDescription(request.getDescription());
+//        existingProduct.setPrice(request.getPrice());
+//        existingProduct.setInStock(request.getInStock());
+//        existingProduct.setSale(request.getSale());
+//        existingProduct.setTimeUpdate(new Timestamp(System.currentTimeMillis()));
+//        existingProduct.setInventory(request.getInventory());
+//        if(categoryRepositoryImpl.findByName(request.getCategory().getName()).isEmpty()){
+//            Category newCategory = new Category(request.getCategory().getName());
+//            categoryRepositoryImpl.save(newCategory);
+//            existingProduct.setCategory(newCategory);
+//        }
+//        existingProduct.setCategory(request.getCategory());
+//        return existingProduct;
+//    }
     private Product updateExistingProduct(Product existingProduct, UpdateProductRequest request){
         existingProduct.setTitle(request.getTitle());
         existingProduct.setArticle(request.getArticle());
@@ -147,12 +189,6 @@ public class ProductServiceImpl implements ProductService {
         existingProduct.setSale(request.getSale());
         existingProduct.setTimeUpdate(new Timestamp(System.currentTimeMillis()));
         existingProduct.setInventory(request.getInventory());
-        if(categoryRepositoryImpl.findByName(request.getCategory().getName()).isEmpty()){
-            Category newCategory = new Category(request.getCategory().getName());
-            categoryRepositoryImpl.save(newCategory);
-            existingProduct.setCategory(newCategory);
-        }
-        existingProduct.setCategory(request.getCategory());
         return existingProduct;
     }
 }

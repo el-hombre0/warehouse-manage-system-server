@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface ProductService {
     List<Product> getProducts();
 
-    List<Product> getProductByCategory(String category);
+//    List<Product> getProductByCategory(String category);
 
     Product getProduct(Long article);
 
@@ -22,5 +22,5 @@ public interface ProductService {
 
     void deleteProductById(Long productId);
 
-    Product updateProduct(UpdateProductRequest product);
+    Product updateProduct(Long id, UpdateProductRequest product);
 }

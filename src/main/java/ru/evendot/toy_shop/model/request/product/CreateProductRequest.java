@@ -16,9 +16,9 @@ public class CreateProductRequest {
     private Long article;
     private String description;
     private Double price;
-    private List<Image> image;
+//    private List<Image> image;
     private Boolean inStock;
     private Integer sale;
     private int inventory;
-    private Category category;
+//    private Category category;
 }

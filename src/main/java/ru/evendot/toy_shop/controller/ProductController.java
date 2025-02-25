@@ -54,17 +54,17 @@ public class ProductController {
         );
     }
 
-    @DeleteMapping("/product")
-    public void deleteProduct(@RequestBody DeleteProduct product) {
-        productService.deleteProductByArticle(product.getArticle());
+    @DeleteMapping("/product/{id}")
+    public void deleteProduct(@PathVariable Long id) {
+        productService.deleteProductById(id);
     }
 
     @PutMapping("/product/{id}")
-    public ResponseEntity<DataResponse> updateProduct(@RequestBody UpdateProductRequest product ) {
+    public ResponseEntity<DataResponse> updateProduct(@PathVariable Long id, @RequestBody UpdateProductRequest product ) {
         return ResponseEntity.ok(
                 new DataResponse(
                         new DataResponseProductFull(
-                                productService.updateProduct(product)
+                                productService.updateProduct(id, product)
                         )
                 )
         );

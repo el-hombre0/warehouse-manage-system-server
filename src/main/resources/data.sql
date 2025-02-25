@@ -1,5 +1,5 @@
-INSERT INTO products(product_id, title, article, description, price, in_stock, sale, inventory)
-SELECT 1, 'Медведь', 10001, 'Плюшевый медведь коричневого цвета', 13.99, true, 5, 4
+INSERT INTO products(title, article, description, price, in_stock, sale, inventory)
+SELECT 'Медведь', 10001, 'Плюшевый медведь коричневого цвета', 13.99, true, 5, 4
 WHERE NOT EXISTS(SELECT * FROM products WHERE article = 10001);
 --
 --INSERT INTO products(title, article, description, price, image, in_stock, sale)

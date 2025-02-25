@@ -16,7 +16,6 @@ import java.util.List;
 public class Product {
 
     @Id
-    @Column(name = "product_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -25,8 +24,8 @@ public class Product {
     private String description;
     private Double price;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> image;
+//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Image> image;
 
     private Boolean inStock;
     private Integer sale;
@@ -34,11 +33,12 @@ public class Product {
     private Timestamp timeUpdate;
     private int inventory;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "category_id")
-    private Category category;
+//    @ManyToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "category_id")
+//    private Category category;
 
-    public Product(String title, Long article, String description, Double price, Boolean inStock, Integer sale, Timestamp timeInsert, Timestamp timeUpdate, int inventory, Category category) {
+//    public Product(String title, Long article, String description, Double price, Boolean inStock, Integer sale, Timestamp timeInsert, Timestamp timeUpdate, int inventory, Category category) {
+public Product(String title, Long article, String description, Double price, Boolean inStock, Integer sale, Timestamp timeInsert, Timestamp timeUpdate, int inventory) {
         this.title = title;
         this.article = article;
         this.description = description;
@@ -48,6 +48,6 @@ public class Product {
         this.timeInsert = timeInsert;
         this.timeUpdate = timeUpdate;
         this.inventory = inventory;
-        this.category = category;
+//        this.category = category;
     }
 }

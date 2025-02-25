@@ -14,7 +14,7 @@ public interface ProductRepository {
 
     Optional<Product> findById(Long id);
 
-    List<Product> findByCategory(String category);
+//    List<Product> findByCategory(String category);
 
     Boolean existsByArticle(Long article);
 
@@ -24,6 +24,6 @@ public interface ProductRepository {
 
     Optional<Long> updateByArticle(Product product);
 
-
+    Optional<Product> updateById(Long id, Product product);
     void deleteById(Product product);
 }

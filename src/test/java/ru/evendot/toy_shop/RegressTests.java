@@ -40,7 +40,7 @@ class RegressTests extends BaseTest {
         Assertions.assertNotNull(prod1.getArticle());
         Assertions.assertNotNull(prod1.getDescription());
         Assertions.assertNotNull(prod1.getPrice());
-        Assertions.assertNotNull(prod1.getImage());
+//        Assertions.assertNotNull(prod1.getImage());
     }
 
     @Test
@@ -57,7 +57,7 @@ class RegressTests extends BaseTest {
         Assertions.assertNotNull(product.getArticle());
         Assertions.assertNotNull(product.getDescription());
         Assertions.assertNotNull(product.getPrice());
-        Assertions.assertNotNull(product.getImage());
+//        Assertions.assertNotNull(product.getImage());
         Assertions.assertNotNull(product.getInStock());
         Assertions.assertNotNull(product.getSale());
         Assertions.assertNotNull(product.getTimeInsert());
@@ -73,7 +73,7 @@ class RegressTests extends BaseTest {
     @DisplayName("Добавление продукта")
     public void addProduct() {
         Specifications.installSpecification(Specifications.requestSpec(StringConst.BASE_URL.toString()), Specifications.responseSpec(200));
-        CreateProductRequest createProduct = new CreateProductRequest("Плюшевая лисичка", 748312L, "Рыжая лисичка, стоящая на задних лапках", 12.50, "/red-fox-standing.png", true, 15);
+        CreateProductRequest createProduct = new CreateProductRequest("Плюшевая лисичка", 748312L, "Рыжая лисичка, стоящая на задних лапках", 12.50, true, 15, 15);
         CreateProductResponse response = given().body(createProduct)
                 .when().post("/product-service/product")
                 .then().log().all()
