@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
@@ -20,4 +19,26 @@ public class Cart {
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CartItem> cartItems;
+
+    private void addItem(CartItem item){
+        this.cartItems.add(item);
+        item.setCart(this);
+        updateTotalAmount();
+    }
+
+    private void removeItem(CartItem item){
+        this.cartItems.remove(item);
+        item.setCart(null);
+        updateTotalAmount();
+    }
+
+    private void updateTotalAmount(){
+        this.totalAmount = cartItems.stream().map(cartItem -> {
+            Double unitPrice = cartItem.getUnitPrice();
+            if (unitPrice == null){
+                return 0.00;
+            }
+            return unitPrice * cartItem.getQuantity();
+        }).reduce(0.00, Double::sum);
+    }
 }
