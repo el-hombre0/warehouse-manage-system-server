@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.evendot.toy_shop.exception.ResourceNotFoundException;
 import ru.evendot.toy_shop.model.Cart;
+import ru.evendot.toy_shop.model.CartItem;
+import ru.evendot.toy_shop.repository.CartItemRepository;
 import ru.evendot.toy_shop.repository.CartRepository;
 import ru.evendot.toy_shop.service.CartService;
 
@@ -11,7 +13,7 @@ import ru.evendot.toy_shop.service.CartService;
 @RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
     private final CartRepository cartRepo;
-
+    private final CartItemRepository cartItemRepo;
     @Override
     public Cart getCart(Long id) {
         Cart cart = cartRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cart with id " + id + "does not exist!")
@@ -23,11 +25,15 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public void clearCart(Long id) {
-
+        Cart cart = getCart(id);
+        cartItemRepo.deleteAllByCartId(id);
+        cart.getCartItems().clear();
+        cartRepo.deleteById(id);
     }
 
     @Override
     public Double getTotalPrice(Long id) {
-        return 0.0;
+        Cart cart = getCart(id);
+        return cart.getTotalAmount();
     }
 }

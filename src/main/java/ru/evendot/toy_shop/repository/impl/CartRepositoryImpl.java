@@ -18,6 +18,7 @@ public class CartRepositoryImpl implements CartRepository {
 
     private final String SELECT_FROM_CARTS_WHERE_ID = "SELECT * FROM carts WHERE id = ?";
     private final String INSERT_INTO_CARTS = "INSERT INTO carts (total_amount, cart_items) VALUES (?, ?)";
+    private final String DELETE_BY_ID = "DELETE FROM carts WHERE id = ?";
 
     @Override
     public Optional<Cart> findById(Long id){
@@ -28,5 +29,10 @@ public class CartRepositoryImpl implements CartRepository {
     public Cart save(Cart cart){
         jdbcTemplate.update(INSERT_INTO_CARTS, cart.getTotalAmount(), cart.getCartItems());
         return cart;
+    }
+
+    @Override
+    public void deleteById(Long id){
+        jdbcTemplate.update(DELETE_BY_ID, id);
     }
 }
