@@ -20,13 +20,13 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CartItem> cartItems;
 
-    private void addItem(CartItem item){
+    public void addItem(CartItem item){
         this.cartItems.add(item);
         item.setCart(this);
         updateTotalAmount();
     }
 
-    private void removeItem(CartItem item){
+    public void removeItem(CartItem item){
         this.cartItems.remove(item);
         item.setCart(null);
         updateTotalAmount();
