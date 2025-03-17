@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
+/**
+ * Корзина товаров
+ */
 @Entity
 @Data
 @AllArgsConstructor
@@ -20,22 +23,35 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CartItem> cartItems;
 
-    public void addItem(CartItem item){
+    /**
+     * Добавление товара в корзину
+     *
+     * @param item Добавляемый товар
+     */
+    public void addItem(CartItem item) {
         this.cartItems.add(item);
         item.setCart(this);
         updateTotalAmount();
     }
 
-    public void removeItem(CartItem item){
+    /**
+     * Удаление товара из корзины
+     *
+     * @param item Удаляемый товар
+     */
+    public void removeItem(CartItem item) {
         this.cartItems.remove(item);
         item.setCart(null);
         updateTotalAmount();
     }
 
-    private void updateTotalAmount(){
+    /**
+     * Обновление стоимости товаров в корзине
+     */
+    private void updateTotalAmount() {
         this.totalAmount = cartItems.stream().map(cartItem -> {
             Double unitPrice = cartItem.getUnitPrice();
-            if (unitPrice == null){
+            if (unitPrice == null) {
                 return 0.00;
             }
             return unitPrice * cartItem.getQuantity();

@@ -2,6 +2,7 @@ package ru.evendot.toy_shop.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.evendot.toy_shop.exception.ResourceNotFoundException;
 import ru.evendot.toy_shop.model.Cart;
 import ru.evendot.toy_shop.model.CartItem;
 import ru.evendot.toy_shop.model.Product;
@@ -11,6 +12,9 @@ import ru.evendot.toy_shop.service.CartItemService;
 import ru.evendot.toy_shop.service.CartService;
 import ru.evendot.toy_shop.service.ProductService;
 
+/**
+ * Реализация элемента корзины покупок
+ */
 @Service
 @RequiredArgsConstructor
 public class CartItemServiceImpl implements CartItemService {
@@ -19,6 +23,12 @@ public class CartItemServiceImpl implements CartItemService {
     private final ProductService productService;
     private final CartService cartService;
 
+    /**
+     * Добавление товара в корзину
+     * @param cartId ID корзины
+     * @param productId ID продукта
+     * @param quantity количество единиц продукта в корзине
+     */
     @Override
     public void addItemToCart(Long cartId, Long productId, int quantity) {
         Cart cart = cartService.getCart(cartId);
@@ -42,13 +52,41 @@ public class CartItemServiceImpl implements CartItemService {
         cartRepo.save(cart);
     }
 
+    /**
+     * Удаление товара из корзины
+     * @param cartId ID корзины
+     * @param productId ID товара
+     */
     @Override
     public void removeItemFromCart(Long cartId, Long productId) {
-
+        Cart cart = cartService.getCart(cartId);
+        CartItem itemToRemove = cart.getCartItems()
+                .stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst().orElseThrow(() -> new ResourceNotFoundException("Product not found!"));
+        cart.removeItem(itemToRemove);
+        cartRepo.save(cart);
     }
 
+    /**
+     * Изменение количества единиц товара в корзине
+     * @param cartId ID корзины
+     * @param productId ID товара
+     */
     @Override
-    public void updateItemQuantity(Long cartId, Long productId) {
-
+    public void updateItemQuantity(Long cartId, Long productId, int quantity) {
+        Cart cart = cartService.getCart(cartId);
+        Product product = productService.getProductById(productId);
+        cart.getCartItems()
+                .stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst().ifPresent(item -> {
+                    item.setQuantity(quantity);
+                    item.setUnitPrice(item.getProduct().getPrice());
+                    item.setTotalPrice();
+                });
+        Double totalAmount = cart.getTotalAmount();
+        cart.setTotalAmount(totalAmount);
+        cartRepo.save(cart);
     }
 }
