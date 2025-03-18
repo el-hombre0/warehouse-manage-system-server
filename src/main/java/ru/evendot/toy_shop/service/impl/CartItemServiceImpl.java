@@ -25,9 +25,10 @@ public class CartItemServiceImpl implements CartItemService {
 
     /**
      * Добавление товара в корзину
-     * @param cartId ID корзины
+     *
+     * @param cartId    ID корзины
      * @param productId ID продукта
-     * @param quantity количество единиц продукта в корзине
+     * @param quantity  количество единиц продукта в корзине
      */
     @Override
     public void addItemToCart(Long cartId, Long productId, int quantity) {
@@ -54,23 +55,22 @@ public class CartItemServiceImpl implements CartItemService {
 
     /**
      * Удаление товара из корзины
-     * @param cartId ID корзины
+     *
+     * @param cartId    ID корзины
      * @param productId ID товара
      */
     @Override
     public void removeItemFromCart(Long cartId, Long productId) {
         Cart cart = cartService.getCart(cartId);
-        CartItem itemToRemove = cart.getCartItems()
-                .stream()
-                .filter(item -> item.getProduct().getId().equals(productId))
-                .findFirst().orElseThrow(() -> new ResourceNotFoundException("Product not found!"));
+        CartItem itemToRemove = getCartItem(cartId, productId);
         cart.removeItem(itemToRemove);
         cartRepo.save(cart);
     }
 
     /**
      * Изменение количества единиц товара в корзине
-     * @param cartId ID корзины
+     *
+     * @param cartId    ID корзины
      * @param productId ID товара
      */
     @Override
@@ -88,5 +88,14 @@ public class CartItemServiceImpl implements CartItemService {
         Double totalAmount = cart.getTotalAmount();
         cart.setTotalAmount(totalAmount);
         cartRepo.save(cart);
+    }
+
+    @Override
+    public CartItem getCartItem(Long cartId, Long productId) {
+        Cart cart = cartService.getCart(cartId);
+        return cart.getCartItems()
+                .stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst().orElseThrow(() -> new ResourceNotFoundException("Item not found!"));
     }
 }
