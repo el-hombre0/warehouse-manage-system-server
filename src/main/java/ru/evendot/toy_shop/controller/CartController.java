@@ -3,12 +3,11 @@ package ru.evendot.toy_shop.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.evendot.toy_shop.exception.ResourceNotFoundException;
 import ru.evendot.toy_shop.model.response.DataResponse;
+import ru.evendot.toy_shop.model.response.cart.DataResponseCart;
+import ru.evendot.toy_shop.model.response.cart.DataResponseCartAmount;
 import ru.evendot.toy_shop.service.CartService;
 
 @RestController
@@ -18,11 +17,17 @@ public class CartController {
 
     private final CartService cartService;
 
+    /**
+     * Получение корзины
+     *
+     * @param cartId Идентификатор корзины
+     * @return Корзина или код ошибки
+     */
     @GetMapping("/{cartId}/my-cart")
     public ResponseEntity<DataResponse> getCart(@PathVariable Long cartId) {
         try {
             return ResponseEntity.ok(
-                    new DataResponse(
+                    new DataResponse<>(
                             cartService.getCart(cartId)
                     )
             );
@@ -31,4 +36,39 @@ public class CartController {
                     .body(new DataResponse<>(e.getMessage()));
         }
     }
+
+    /**
+     * Очистка корзины
+     *
+     * @param cartId Идентификатор корзины
+     * @return Сообщение, что корзина очищена
+     */
+    @DeleteMapping("/{cartId}/clear")
+    public ResponseEntity<DataResponse> clearCart(@PathVariable Long cartId) {
+        try {
+            cartService.clearCart(cartId);
+            return ResponseEntity.ok().body(new DataResponse<>(new DataResponseCart("Cart was cleared.")));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(new DataResponse<>(e.getMessage()));
+        }
+    }
+
+    /**
+     * Получение стоимости корзины
+     *
+     * @param cartId Идентификатор корзины
+     * @return Стоимость корзины
+     */
+    @GetMapping("/{cartId}/cart/total-price")
+    public ResponseEntity<DataResponse> getTotalAmount(@PathVariable Long cartId) {
+        try {
+            Double totalAmount = cartService.getTotalPrice(cartId);
+            return ResponseEntity.ok().body(new DataResponse<>(new DataResponseCartAmount(totalAmount)));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatusCode.valueOf(404))
+                    .body(new DataResponse<>(e.getMessage()));
+        }
+    }
+
+
 }
