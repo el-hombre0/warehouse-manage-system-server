@@ -5,8 +5,10 @@ import org.springframework.stereotype.Service;
 import ru.evendot.toy_shop.exception.ResourceNotFoundException;
 import ru.evendot.toy_shop.model.Cart;
 import ru.evendot.toy_shop.repository.CartItemRepository;
-import ru.evendot.toy_shop.repository.CartRepository;
+import ru.evendot.toy_shop.repository.impl.CartRepositoryImpl;
 import ru.evendot.toy_shop.service.CartService;
+
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Сервис работы с корзиной покупок
@@ -14,8 +16,9 @@ import ru.evendot.toy_shop.service.CartService;
 @Service
 @RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
-    private final CartRepository cartRepo;
+    private final CartRepositoryImpl cartRepo;
     private final CartItemRepository cartItemRepo;
+    private final AtomicLong cartIdGenerator = new AtomicLong(0);
 
     /**
      * Получение корзины
@@ -25,11 +28,12 @@ public class CartServiceImpl implements CartService {
      */
     @Override
     public Cart getCart(Long id) {
-        Cart cart = cartRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Cart with id " + id + "does not exist!")
+        return cartRepo.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Cart with id " + id + "does not exist!")
         );
-        Double totalAmount = cart.getTotalAmount();
-        cart.setTotalAmount(totalAmount);
-        return cartRepo.save(cart);
+//        Double totalAmount = cart.getTotalAmount();
+//        cart.setTotalAmount(totalAmount);
+//        return cartRepo.updateCart(cart);
     }
 
     /**
@@ -55,5 +59,13 @@ public class CartServiceImpl implements CartService {
     public Double getTotalPrice(Long id) {
         Cart cart = getCart(id);
         return cart.getTotalAmount();
+    }
+
+    @Override
+    public Long initializeNewCart() {
+        Cart cart = new Cart();
+        Long newCartId = cartIdGenerator.incrementAndGet();
+        cart.setId(newCartId);
+        return cartRepo.save(cart).getId();
     }
 }

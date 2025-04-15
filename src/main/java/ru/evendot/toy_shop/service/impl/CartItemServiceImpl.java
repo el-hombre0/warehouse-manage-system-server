@@ -12,6 +12,9 @@ import ru.evendot.toy_shop.service.CartItemService;
 import ru.evendot.toy_shop.service.CartService;
 import ru.evendot.toy_shop.service.ProductService;
 
+import java.util.HashSet;
+import java.util.Optional;
+
 /**
  * Реализация элемента корзины покупок
  */
@@ -34,7 +37,7 @@ public class CartItemServiceImpl implements CartItemService {
     public void addItemToCart(Long cartId, Long productId, int quantity) {
         Cart cart = cartService.getCart(cartId);
         Product product = productService.getProductById(productId);
-        CartItem cartItem = cart.getCartItems()
+        CartItem cartItem = Optional.ofNullable(cart.getCartItems()).orElse(new HashSet<>())
                 .stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
                 .findFirst().orElse(new CartItem());
@@ -50,7 +53,8 @@ public class CartItemServiceImpl implements CartItemService {
         cartItem.setTotalPrice();
         cart.addItem(cartItem);
         cartItemRepo.save(cartItem);
-        cartRepo.save(cart);
+//        cartRepo.save(cart);
+        cartRepo.updateCart(cart);
     }
 
     /**
@@ -76,18 +80,19 @@ public class CartItemServiceImpl implements CartItemService {
     @Override
     public void updateItemQuantity(Long cartId, Long productId, int quantity) {
         Cart cart = cartService.getCart(cartId);
-        Product product = productService.getProductById(productId);
         cart.getCartItems()
                 .stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
-                .findFirst().ifPresent(item -> {
+                .findFirst()
+                .ifPresent(item -> {
                     item.setQuantity(quantity);
                     item.setUnitPrice(item.getProduct().getPrice());
                     item.setTotalPrice();
                 });
-        Double totalAmount = cart.getTotalAmount();
+        Double totalAmount = cart.getCartItems()
+                .stream().mapToDouble(CartItem::getTotalPrice).sum();
         cart.setTotalAmount(totalAmount);
-        cartRepo.save(cart);
+        cartRepo.updateCart(cart);
     }
 
     @Override

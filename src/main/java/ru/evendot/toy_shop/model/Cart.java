@@ -1,19 +1,20 @@
 package ru.evendot.toy_shop.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
  * Корзина товаров
  */
 @Entity
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "carts")
 public class Cart {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +22,7 @@ public class Cart {
     private Double totalAmount = 0.00;
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CartItem> cartItems;
+    private Set<CartItem> cartItems = new HashSet<>();
 
     /**
      * Добавление товара в корзину
@@ -30,7 +31,7 @@ public class Cart {
      */
     public void addItem(CartItem item) {
         this.cartItems.add(item);
-        item.setCart(this);
+//        item.setCart(this);
         updateTotalAmount();
     }
 

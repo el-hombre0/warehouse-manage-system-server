@@ -23,7 +23,7 @@ public class CartController {
      * @param cartId Идентификатор корзины
      * @return Корзина или код ошибки
      */
-    @GetMapping("/{cartId}/my-cart")
+    @GetMapping("/{cartId}")
     public ResponseEntity<DataResponse> getCart(@PathVariable Long cartId) {
         try {
             return ResponseEntity.ok(
