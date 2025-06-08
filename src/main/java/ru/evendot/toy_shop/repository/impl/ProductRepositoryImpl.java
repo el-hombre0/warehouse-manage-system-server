@@ -1,8 +1,11 @@
 package ru.evendot.toy_shop.repository.impl;
 
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
+import ru.evendot.toy_shop.exception.ResourceNotFoundException;
 import ru.evendot.toy_shop.model.Product;
 import ru.evendot.toy_shop.repository.ProductRepository;
 
@@ -56,11 +59,16 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     public Optional<Product> findById(Long id) {
-        return Optional.ofNullable(jdbcTemplate.queryForObject(
-                SELECT_FROM_TABLE_WHERE_ID,
-                new BeanPropertyRowMapper<>(Product.class),
-                id)
-        );
+        try {
+            return Optional.ofNullable(jdbcTemplate.queryForObject(
+                    SELECT_FROM_TABLE_WHERE_ID,
+                    new BeanPropertyRowMapper<>(Product.class),
+                    id)
+            );
+        }
+        catch (EmptyResultDataAccessException e){
+            throw new ResourceNotFoundException("Product with id="+id+" not found!");
+        }
     }
 
 //    public List<Product> findByCategory(String category) {

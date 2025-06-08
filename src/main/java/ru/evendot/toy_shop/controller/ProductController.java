@@ -1,8 +1,10 @@
 package ru.evendot.toy_shop.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.evendot.toy_shop.exception.ResourceNotFoundException;
 import ru.evendot.toy_shop.model.request.product.CreateProductRequest;
 import ru.evendot.toy_shop.model.request.product.DeleteProduct;
 import ru.evendot.toy_shop.model.request.product.UpdateProductRequest;
@@ -32,14 +34,14 @@ public class ProductController {
     }
 
     @GetMapping("/product/{id}")
-    public ResponseEntity<DataResponse> getProduct(@PathVariable Long id){
-        return ResponseEntity.ok(
-                new DataResponse(
-                        new DataResponseProductFull(
-                                productService.getProductById(id)
-                        )
-                )
-        );
+    public ResponseEntity<DataResponse> getProduct(@PathVariable Long id) throws ResourceNotFoundException{
+            return ResponseEntity.ok(
+                    new DataResponse(
+                            new DataResponseProductFull(
+                                    productService.getProductById(id)
+                            )
+                    )
+            );
     }
 
     @PostMapping("/product")

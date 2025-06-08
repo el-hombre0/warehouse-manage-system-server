@@ -2,7 +2,7 @@ spring:
   datasource:
     username: dbadmin
     password: qwerty
-    url: jdbc:postgresql://127.0.0.1:5430/toyshopdb
+    url: jdbc:postgresql://127.0.0.1:5430/warehousedb
   jpa:
     properties:
       hibernate:
