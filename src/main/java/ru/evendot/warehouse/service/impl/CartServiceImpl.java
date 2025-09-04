@@ -5,7 +5,8 @@ import org.springframework.stereotype.Service;
 import ru.evendot.warehouse.exception.ResourceNotFoundException;
 import ru.evendot.warehouse.model.Cart;
 import ru.evendot.warehouse.repository.CartItemRepository;
-import ru.evendot.warehouse.repository.impl.CartRepositoryImpl;
+//import ru.evendot.warehouse.repository.impl.CartRepositoryImpl;
+import ru.evendot.warehouse.repository.CartRepository;
 import ru.evendot.warehouse.service.CartService;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -16,9 +17,10 @@ import java.util.concurrent.atomic.AtomicLong;
 @Service
 @RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
-    private final CartRepositoryImpl cartRepo;
+//    private final CartRepositoryImpl cartRepo;
+    private final CartRepository cartRepo;
     private final CartItemRepository cartItemRepo;
-    private final AtomicLong cartIdGenerator = new AtomicLong(0);
+//    private final AtomicLong cartIdGenerator = new AtomicLong(0);
 
     /**
      * Получение корзины
@@ -29,7 +31,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public Cart getCart(Long id) {
         return cartRepo.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Cart with id " + id + "does not exist!")
+                () -> new ResourceNotFoundException("Cart with id " + id + " does not exist!")
         );
 //        Double totalAmount = cart.getTotalAmount();
 //        cart.setTotalAmount(totalAmount);
@@ -64,8 +66,8 @@ public class CartServiceImpl implements CartService {
     @Override
     public Long initializeNewCart() {
         Cart cart = new Cart();
-        Long newCartId = cartIdGenerator.incrementAndGet();
-        cart.setId(newCartId);
+//        Long newCartId = cartIdGenerator.incrementAndGet();
+//        cart.setId(newCartId);
         return cartRepo.save(cart).getId();
     }
 }

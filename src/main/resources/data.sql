@@ -1,6 +1,11 @@
 INSERT INTO products(title, article, description, price, in_stock, sale, inventory)
 SELECT 'Медведь', 10001, 'Плюшевый медведь коричневого цвета', 13.99, true, 5, 4
 WHERE NOT EXISTS(SELECT * FROM products WHERE article = 10001);
+
+INSERT INTO products(title, article, description, price, in_stock, sale, inventory)
+SELECT 'Каска Camp S1', 10002, 'Каска туристическая для занятия альпинизмом', 5799.00, true, 5, 15
+WHERE NOT EXISTS(SELECT * FROM products WHERE article = 10002);
+
 --
 --INSERT INTO products(title, article, description, price, image, in_stock, sale)
 --SELECT 'Котик', 10002, 'Флисовый котик рыжего цвета', 10.8, '/cat10002.png', true, 0

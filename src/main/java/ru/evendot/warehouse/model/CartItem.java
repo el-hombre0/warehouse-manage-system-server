@@ -1,5 +1,6 @@
 package ru.evendot.warehouse.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,14 +17,25 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    /**
+     * Кол-во элементов единиц товара в корзине
+     */
     private int quantity;
+    /**
+     * Цена единицы товара в корзине
+     */
     private Double unitPrice;
+
+    /**
+     * Стоимость всех единиц данного товара в корзине
+     */
     private Double totalPrice;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "cart_id")
     private Cart cart;

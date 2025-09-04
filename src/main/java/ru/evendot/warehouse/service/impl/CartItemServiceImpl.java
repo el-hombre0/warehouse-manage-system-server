@@ -6,8 +6,10 @@ import ru.evendot.warehouse.exception.ResourceNotFoundException;
 import ru.evendot.warehouse.model.Cart;
 import ru.evendot.warehouse.model.CartItem;
 import ru.evendot.warehouse.model.Product;
-import ru.evendot.warehouse.repository.impl.CartItemRepositoryImpl;
-import ru.evendot.warehouse.repository.impl.CartRepositoryImpl;
+import ru.evendot.warehouse.repository.CartItemRepository;
+import ru.evendot.warehouse.repository.CartRepository;
+//import ru.evendot.warehouse.repository.impl.CartItemRepositoryImpl;
+//import ru.evendot.warehouse.repository.impl.CartRepositoryImpl;
 import ru.evendot.warehouse.service.CartItemService;
 import ru.evendot.warehouse.service.CartService;
 import ru.evendot.warehouse.service.ProductService;
@@ -21,8 +23,10 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CartItemServiceImpl implements CartItemService {
-    private final CartItemRepositoryImpl cartItemRepo;
-    private final CartRepositoryImpl cartRepo;
+//    private final CartItemRepositoryImpl cartItemRepo;
+    private final CartItemRepository cartItemRepo;
+//    private final CartRepositoryImpl cartRepo;
+    private final CartRepository cartRepo;
     private final ProductService productService;
     private final CartService cartService;
 
@@ -37,7 +41,7 @@ public class CartItemServiceImpl implements CartItemService {
     public void addItemToCart(Long cartId, Long productId, int quantity) {
         Cart cart = cartService.getCart(cartId);
         Product product = productService.getProductById(productId);
-        CartItem cartItem = Optional.ofNullable(cart.getCartItems()).orElse(new HashSet<>())
+        CartItem cartItem = cart.getCartItems()
                 .stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
                 .findFirst().orElse(new CartItem());
@@ -47,14 +51,18 @@ public class CartItemServiceImpl implements CartItemService {
             cartItem.setProduct(product);
             cartItem.setQuantity(quantity);
             cartItem.setUnitPrice(product.getPrice());
+//            cartItem.setTotalPrice();
+//            cart.addItem(cartItem);
         } else { // Если товар уже лежит в корзине
+//            cartItem.setTotalPrice();
             cartItem.setQuantity(cartItem.getQuantity() + quantity);
         }
         cartItem.setTotalPrice();
         cart.addItem(cartItem);
         cartItemRepo.save(cartItem);
-//        cartRepo.save(cart);
-        cartRepo.updateCart(cart);
+        // Error Создается второй cartItem
+        cartRepo.save(cart);
+//        cartRepo.updateCart(cart);
     }
 
     /**
@@ -92,7 +100,8 @@ public class CartItemServiceImpl implements CartItemService {
         Double totalAmount = cart.getCartItems()
                 .stream().mapToDouble(CartItem::getTotalPrice).sum();
         cart.setTotalAmount(totalAmount);
-        cartRepo.updateCart(cart);
+//        cartRepo.updateCart(cart);
+        cartRepo.save(cart);
     }
 
     @Override
