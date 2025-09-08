@@ -6,7 +6,8 @@ import org.springframework.stereotype.Service;
 import ru.evendot.warehouse.exception.CustomException;
 import ru.evendot.warehouse.exception.ResourceNotFoundException;
 import ru.evendot.warehouse.model.Order;
-import ru.evendot.warehouse.model.Statuses;
+import ru.evendot.warehouse.model.OrderStatus;
+import ru.evendot.warehouse.model.PaymentStatus;
 import ru.evendot.warehouse.model.request.order.CreateOrder;
 import ru.evendot.warehouse.repository.impl.OrderRepositoryImpl;
 import ru.evendot.warehouse.service.OrderService;
@@ -34,14 +35,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Long save(CreateOrder createOrder) throws CustomException {
         Order order = new Order();
-        order.setCost(createOrder.getCost());
+        order.setTotalAmount(createOrder.getCost());
         order.setUuid(Generators.timeBasedGenerator().generate());
-        order.setPayMethod(createOrder.getPayMethod());
+        order.setPaymentMethod(createOrder.getPaymentMethod());
+        order.setPaymentStatus(PaymentStatus.PAYMENT_PENDING);
         order.setOrderProducts(null);
         order.setUser(createOrder.getUser());
         order.setComment(createOrder.getComment());
         order.setTimeCreation(new Timestamp(System.currentTimeMillis()));
-        order.setStatus(Statuses.ACCEPTED);
+        order.setStatus(OrderStatus.PENDING);
         order.setAddress(createOrder.getAddress());
         return orderRepositoryImpl.save(order).orElseThrow();
     }

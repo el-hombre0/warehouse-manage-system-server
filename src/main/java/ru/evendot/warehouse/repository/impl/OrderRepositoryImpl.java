@@ -27,9 +27,9 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public Optional<Long> save(Order order) {
         jdbcTemplate.update(SQL_Queries.INSERT_INTO_TABLE.toString(),
-                order.getCost(),
+                order.getTotalAmount(),
                 order.getUuid(),
-                order.getPayMethod(),
+                order.getPaymentMethod(),
                 order.getOrderProducts(),
                 order.getUser(),
                 order.getComment(),

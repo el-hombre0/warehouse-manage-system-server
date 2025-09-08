@@ -1,6 +1,6 @@
 package ru.evendot.warehouse.model;
 
-public enum PayMethods {
+public enum PaymentMethod {
     CARD,
     CASH,
     PAYPAL

@@ -1,7 +1,8 @@
 INSERT INTO products(title, article, description, price, in_stock, sale, inventory)
-SELECT 'Медведь', 10001, 'Плюшевый медведь коричневого цвета', 13.99, true, 5, 4
+SELECT 'Рюкзак Outventure Creek 80', 10001, 'Рюкзак зеленого цвета объемом 80 литров для начинающих', 5200.00, true, null, 30
 WHERE NOT EXISTS(SELECT * FROM products WHERE article = 10001);
-
+--INSERT INTO products (id, title, article, description, price, in_stock, sale, inventory)
+--VALUES (1, 'Рюкзак Outventure Crik 80', 10001, 'Рюкзак зеленого цвета объемом 80 литров для начинающих', 5200.00, true, null, 30);
 INSERT INTO products(title, article, description, price, in_stock, sale, inventory)
 SELECT 'Каска Camp S1', 10002, 'Каска туристическая для занятия альпинизмом', 5799.00, true, 5, 15
 WHERE NOT EXISTS(SELECT * FROM products WHERE article = 10002);
