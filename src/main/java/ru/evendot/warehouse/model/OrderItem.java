@@ -1,7 +1,6 @@
 package ru.evendot.warehouse.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,6 +21,9 @@ public class OrderItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    /**
+     * Количество единиц товара в заказе
+     */
     private int quantity;
 
     private Double price;

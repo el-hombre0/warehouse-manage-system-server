@@ -41,7 +41,7 @@ public class Order {
     private Timestamp timeCreation;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus status;
+    private OrderStatus orderStatus;
 
     @OneToOne
     @JoinColumn(name = "addressId")

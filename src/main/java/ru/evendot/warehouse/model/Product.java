@@ -31,6 +31,10 @@ public class Product {
     private Integer sale;
     private Timestamp timeInsert;
     private Timestamp timeUpdate;
+
+    /**
+     * Количество товара в наличии
+     */
     private int inventory;
 
 //    @ManyToOne(cascade = CascadeType.ALL)

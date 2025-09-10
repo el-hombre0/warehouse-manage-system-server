@@ -34,7 +34,7 @@ public class OrderRepositoryImpl implements OrderRepository {
                 order.getUser(),
                 order.getComment(),
                 order.getTimeCreation(),
-                order.getStatus(),
+                order.getOrderStatus(),
                 order.getAddress());
         return Optional.of(order.getId());
     }
@@ -45,6 +45,15 @@ public class OrderRepositoryImpl implements OrderRepository {
                 SQL_Queries.SELECT_FROM_TABLE_WHERE_ID.toString(),
                 new BeanPropertyRowMapper<>(Order.class),
                 uuid)
+        );
+    }
+
+    @Override
+    public Optional<Order> findById(Long id) {
+        return Optional.ofNullable(jdbcTemplate.queryForObject(
+                SQL_Queries.FIND_ORDER_BY_ID.toString(),
+                new BeanPropertyRowMapper<>(Order.class),
+                id)
         );
     }
 
