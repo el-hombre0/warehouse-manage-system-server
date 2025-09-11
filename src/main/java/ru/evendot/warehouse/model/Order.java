@@ -6,7 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.util.*;
+import java.util.Set;
+import java.util.UUID;
 
 @Data
 @Entity
@@ -27,14 +28,14 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
-    @Enumerated
+    @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
 
-    @OneToMany(mappedBy = "pk.order")
-    private List<OrderProduct> orderProducts = new ArrayList<>();
+//    @OneToMany(mappedBy = "pk.order")
+//    private List<OrderProduct> orderProducts = new ArrayList<>();
 
-    @OneToOne
-    @JoinColumn(name = "userId")
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
     private String comment;
@@ -44,6 +45,6 @@ public class Order {
     private OrderStatus orderStatus;
 
     @OneToOne
-    @JoinColumn(name = "addressId")
+    @JoinColumn(name = "address_id")
     private Address address;
 }

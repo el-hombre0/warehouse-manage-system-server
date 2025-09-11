@@ -41,6 +41,12 @@ public class CartServiceImpl implements CartService {
 //        return cartRepo.updateCart(cart);
     }
 
+    @Override
+    public Cart getCartByUserId(Long userId) {
+        // TODO
+        return null;
+    }
+
     /**
      * Очистка корзины
      *

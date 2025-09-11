@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface OrderRepository {
     Optional<List<Order>> findAll();
 
-    Optional<Long> save(Order order);
+    Order save(Order order);
 
     Optional<Order> findByUUID(UUID uuid);
 

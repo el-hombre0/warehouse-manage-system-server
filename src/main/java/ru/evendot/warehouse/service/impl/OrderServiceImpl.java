@@ -3,49 +3,33 @@ package ru.evendot.warehouse.service.impl;
 import com.fasterxml.uuid.Generators;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.evendot.warehouse.exception.CustomException;
 import ru.evendot.warehouse.exception.ResourceNotFoundException;
 import ru.evendot.warehouse.model.*;
-import ru.evendot.warehouse.model.request.order.CreateOrder;
 import ru.evendot.warehouse.repository.impl.OrderRepositoryImpl;
 import ru.evendot.warehouse.repository.impl.ProductRepositoryImpl;
 import ru.evendot.warehouse.service.OrderService;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    private final OrderRepositoryImpl orderRepositoryImpl;
+    private final OrderRepositoryImpl orderRepository;
     private final ProductRepositoryImpl productRepository;
+    private final CartServiceImpl cartService;
 
     @Override
     public List<Order> getOrders() {
-        return orderRepositoryImpl.findAll().orElseThrow();
+        return orderRepository.findAll().orElseThrow();
     }
 
     @Override
     public Order getOrder(Long id) {
-        return orderRepositoryImpl.findById(id).orElseThrow(
+        return orderRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Order with id:" + id.toString() + " doesn't exist."));
-    }
-
-    @Override
-    public Long save(CreateOrder createOrder) throws CustomException {
-        Order order = new Order();
-        order.setTotalAmount(createOrder.getCost());
-        order.setUuid(Generators.timeBasedGenerator().generate());
-        order.setPaymentMethod(createOrder.getPaymentMethod());
-        order.setPaymentStatus(PaymentStatus.PAYMENT_PENDING);
-        order.setOrderProducts(null);
-        order.setUser(createOrder.getUser());
-        order.setComment(createOrder.getComment());
-        order.setTimeCreation(new Timestamp(System.currentTimeMillis()));
-        order.setOrderStatus(OrderStatus.PENDING);
-        order.setAddress(createOrder.getAddress());
-        return orderRepositoryImpl.save(order).orElseThrow();
     }
 
     /**
@@ -55,9 +39,28 @@ public class OrderServiceImpl implements OrderService {
      * @return Заказ
      */
     @Override
-    public Order placeOrder(User userId) {
-        return null;
+    public Order placeOrder(Long userId) {
+        Cart cart = cartService.getCartByUserId(userId);
+        Order order = createOrder(cart);
+        List<OrderItem> orderItemsList = createOrderItems(order, cart);
+
+        order.setOrderItems(new HashSet<>(orderItemsList));
+        order.setTotalAmount(cart.getTotalAmount());
+        order.setPaymentMethod(PaymentMethod.NO_PAY);
+
+        //TODO временно
+        order.setComment(null);
+        order.setOrderStatus(OrderStatus.PENDING);
+
+        // TODO временно
+        order.setAddress(null);
+
+        Order savedOrder = orderRepository.save(order);
+
+        cartService.clearCart(cart.getId());
+        return savedOrder;
     }
+
 
     /**
      * Создание заказа
@@ -68,9 +71,12 @@ public class OrderServiceImpl implements OrderService {
     private Order createOrder(Cart cart) {
         Order order = new Order();
         order.setOrderStatus(OrderStatus.PENDING);
-        //TODO Добавить установку пользователя
+        order.setUser(cart.getUser());
 //        LocalDate timeNow = LocalDate.now();
 //        order.setTimeCreation(Timestamp.valueOf(timeNow.atStartOfDay()));
+        order.setUuid(Generators.timeBasedGenerator().generate());
+        order.setPaymentStatus(PaymentStatus.PAYMENT_PENDING);
+
         order.setTimeCreation(new Timestamp(System.currentTimeMillis()));
         return order;
     }

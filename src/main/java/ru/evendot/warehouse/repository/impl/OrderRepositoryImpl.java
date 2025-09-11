@@ -25,18 +25,19 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Optional<Long> save(Order order) {
-        jdbcTemplate.update(SQL_Queries.INSERT_INTO_TABLE.toString(),
+    public Order save(Order order) {
+        jdbcTemplate.update(SQL_Queries.SAVE_ORDER.toString(),
                 order.getTotalAmount(),
                 order.getUuid(),
+                order.getOrderItems(),
                 order.getPaymentMethod(),
-                order.getOrderProducts(),
-                order.getUser(),
+                order.getPaymentStatus(),
+                order.getUser().getId(),
                 order.getComment(),
                 order.getTimeCreation(),
                 order.getOrderStatus(),
                 order.getAddress());
-        return Optional.of(order.getId());
+        return order;
     }
 
     @Override
