@@ -58,6 +58,11 @@ public class OrderRepositoryImpl implements OrderRepository {
         );
     }
 
+    @Override
+    public List<Order> findAllByUserId(Long userId) {
+        return jdbcTemplate.query(SQL_Queries.SELECT_ORDERS_WHERE_USERID.toString(), new BeanPropertyRowMapper<>(Order.class));
+    }
+
 //    @Override
 //    public Boolean existsById(Long id) {
 //        return null;

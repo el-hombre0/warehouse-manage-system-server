@@ -9,6 +9,8 @@ public interface OrderService {
 
     Order getOrder(Long id);
 
+    List<Order> getUserOrders(Long userId);
+
     Order placeOrder(Long userId);
 
 

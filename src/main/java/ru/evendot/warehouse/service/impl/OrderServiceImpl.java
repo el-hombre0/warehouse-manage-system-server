@@ -32,6 +32,11 @@ public class OrderServiceImpl implements OrderService {
                 () -> new ResourceNotFoundException("Order with id:" + id.toString() + " doesn't exist."));
     }
 
+    @Override
+    public List<Order> getUserOrders(Long userId){
+        return orderRepository.findAllByUserId(userId);
+    }
+
     /**
      * Размещение заказа (закрепление за пользователем)
      *
