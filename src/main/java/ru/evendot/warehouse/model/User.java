@@ -2,8 +2,11 @@ package ru.evendot.warehouse.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import org.hibernate.annotations.NaturalId;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Entity
@@ -16,6 +19,9 @@ public class User {
     private String lastname;
     private String middlename;
     private String phoneNumber;
+    private Map<String, String> socialMedia = new HashMap<>();
+
+    @NaturalId
     private String email;
     private String password;
 
@@ -25,7 +31,5 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders;
 
-    @OneToOne
-    @JoinColumn(name = "")
     private Address userAddress;
 }

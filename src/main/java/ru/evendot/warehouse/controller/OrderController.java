@@ -5,12 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.evendot.warehouse.model.request.order.CreateOrder;
 import ru.evendot.warehouse.model.response.DataResponse;
-import ru.evendot.warehouse.model.response.order.DataResponseOrder;
 import ru.evendot.warehouse.model.response.order.DataResponseOrderFull;
 import ru.evendot.warehouse.model.response.order.DataResponseOrderList;
 import ru.evendot.warehouse.service.OrderService;
-
-import java.util.UUID;
 
 
 @RestController
@@ -21,7 +18,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping("/order")
-    public ResponseEntity<DataResponse> getAllOrders(){
+    public ResponseEntity<DataResponse> getAllOrders() {
         return ResponseEntity.ok(
                 new DataResponse(
                         new DataResponseOrderList(
@@ -31,24 +28,24 @@ public class OrderController {
         );
     }
 
-    @GetMapping("/order/{uuid}")
-    public ResponseEntity<DataResponse> getOrder(@PathVariable UUID uuid){
+    @GetMapping("/order/{id}")
+    public ResponseEntity<DataResponse> getOrder(@PathVariable Long id) {
         return ResponseEntity.ok(
                 new DataResponse(
                         new DataResponseOrderFull(
-                                orderService.getOrder(uuid)
+                                orderService.getOrder(id)
                         )
                 )
         );
     }
 
     @PostMapping("/order")
-    public ResponseEntity<DataResponse> addOrder(@RequestBody CreateOrder orderRequest){
+    public ResponseEntity<DataResponse> addOrder(@RequestBody CreateOrder orderRequest) {
         return ResponseEntity.ok(
                 new DataResponse(
-                        new DataResponseOrder(
+                        new DataResponseOrderFull(
                                 // TODO
-                                orderService.placeOrder(orderRequest)
+                                orderService.placeOrder(orderRequest.getUser().getId())
                         )
                 )
         );
