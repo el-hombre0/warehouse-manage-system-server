@@ -1,13 +1,11 @@
 package ru.evendot.warehouse.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.evendot.warehouse.exception.ResourceNotFoundException;
 import ru.evendot.warehouse.model.response.DataResponse;
-import ru.evendot.warehouse.model.response.cart.DataResponseCart;
-import ru.evendot.warehouse.model.response.cart.DataResponseCartAmount;
 import ru.evendot.warehouse.service.CartService;
 
 @RestController
@@ -27,13 +25,13 @@ public class CartController {
     public ResponseEntity<DataResponse> getCart(@PathVariable Long cartId) {
         try {
             return ResponseEntity.ok(
-                    new DataResponse<>(
-                            cartService.getCart(cartId)
+                    new DataResponse("Cert received successfully!", cartService.getCart(cartId)
                     )
             );
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatusCode.valueOf(404))
-                    .body(new DataResponse<>(e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new DataResponse("Cart not found!", e.getMessage())
+            );
         }
     }
 
@@ -47,9 +45,10 @@ public class CartController {
     public ResponseEntity<DataResponse> clearCart(@PathVariable Long cartId) {
         try {
             cartService.clearCart(cartId);
-            return ResponseEntity.ok().body(new DataResponse<>(new DataResponseCart("Cart was cleared.")));
+            return ResponseEntity.ok().body(new DataResponse("Cart cleared!", null));
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(new DataResponse<>(e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DataResponse("Cart with id " +
+                    cartId + " not found!", e.getMessage()));
         }
     }
 
@@ -63,10 +62,11 @@ public class CartController {
     public ResponseEntity<DataResponse> getTotalAmount(@PathVariable Long cartId) {
         try {
             Double totalAmount = cartService.getTotalPrice(cartId);
-            return ResponseEntity.ok().body(new DataResponse<>(new DataResponseCartAmount(totalAmount)));
+            return ResponseEntity.ok().body(new DataResponse("Total amount received successfully!",
+                    totalAmount));
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatusCode.valueOf(404))
-                    .body(new DataResponse<>(e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DataResponse("Cart with id " +
+                    cartId + "not found!", e.getMessage()));
         }
     }
 

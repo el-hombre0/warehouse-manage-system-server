@@ -1,7 +1,7 @@
 package ru.evendot.warehouse.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.evendot.warehouse.exception.ResourceNotFoundException;
@@ -25,16 +25,18 @@ public class CartItemController {
      * @return Сообщение о добавлении товара в корзину или об ошибке поиска корзины
      */
     @PostMapping("/add")
-    public ResponseEntity<DataResponse> addItemToCart(@RequestParam(required = false) Long cartId, @RequestParam Long productId,
+    public ResponseEntity<DataResponse> addItemToCart(@RequestParam(required = false) Long cartId,
+                                                      @RequestParam Long productId,
                                                       @RequestParam Integer quantity) {
         try {
             if (cartId == null) { // Если корзина изначально пустая (не существует)
                 cartId = cartService.initializeNewCart();
             }
             cartItemService.addItemToCart(cartId, productId, quantity);
-            return ResponseEntity.ok(new DataResponse<>("Item added to cart!"));
+            return ResponseEntity.ok(new DataResponse("Item added to cart!", null));
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(new DataResponse<>(e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DataResponse(
+                    "Cart with id " + cartId + " not found", e.getMessage()));
         }
     }
 
@@ -49,9 +51,10 @@ public class CartItemController {
     public ResponseEntity<DataResponse> removeItemFromCart(@RequestParam Long cartId, @RequestParam Long productId) {
         try {
             cartItemService.removeItemFromCart(cartId, productId);
-            return ResponseEntity.ok(new DataResponse<>("Item removed from cart!"));
+            return ResponseEntity.ok(new DataResponse("Item removed from cart!", null));
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(new DataResponse<>(e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DataResponse(
+                    "Cart or product not found!", e.getMessage()));
         }
     }
 
@@ -68,9 +71,11 @@ public class CartItemController {
                                                            @RequestParam Long productId, @RequestParam int quantity) {
         try {
             cartItemService.updateItemQuantity(cartId, productId, quantity);
-            return ResponseEntity.ok().body(new DataResponse<>("Item quantity was updated!"));
+            return ResponseEntity.ok().body(new DataResponse(
+                    "Item quantity updated successfully!", null));
         } catch (ResourceNotFoundException e) {
-            return ResponseEntity.status(HttpStatusCode.valueOf(404)).body(new DataResponse<>(e.getMessage()));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DataResponse(
+                    "Cart or product not found!", e.getMessage()));
         }
     }
 
