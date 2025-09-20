@@ -1,5 +1,6 @@
 package ru.evendot.warehouse.service;
 
+import ru.evendot.warehouse.dto.OrderDTO;
 import ru.evendot.warehouse.model.Order;
 
 import java.util.List;
@@ -7,9 +8,9 @@ import java.util.List;
 public interface OrderService {
     List<Order> getOrders();
 
-    Order getOrder(Long id);
+    OrderDTO getOrder(Long id);
 
-    List<Order> getUserOrders(Long userId);
+    List<OrderDTO> getUserOrders(Long userId);
 
     Order placeOrder(Long userId);
 

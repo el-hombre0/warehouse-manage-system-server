@@ -2,7 +2,9 @@ package ru.evendot.warehouse.service.impl;
 
 import com.fasterxml.uuid.Generators;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import ru.evendot.warehouse.dto.OrderDTO;
 import ru.evendot.warehouse.exception.ResourceNotFoundException;
 import ru.evendot.warehouse.model.*;
 import ru.evendot.warehouse.repository.impl.OrderRepositoryImpl;
@@ -20,6 +22,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepositoryImpl orderRepository;
     private final ProductRepositoryImpl productRepository;
     private final CartServiceImpl cartService;
+    private final ModelMapper modelMapper;
 
     @Override
     public List<Order> getOrders() {
@@ -27,14 +30,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order getOrder(Long id) {
-        return orderRepository.findById(id).orElseThrow(
+    public OrderDTO getOrder(Long id) {
+        return orderRepository.findById(id).map(this::convertToDTO).orElseThrow(
                 () -> new ResourceNotFoundException("Order with id:" + id.toString() + " doesn't exist."));
     }
 
     @Override
-    public List<Order> getUserOrders(Long userId){
-        return orderRepository.findAllByUserId(userId);
+    public List<OrderDTO> getUserOrders(Long userId) {
+        List<Order> orders = orderRepository.findAllByUserId(userId).orElseThrow(
+                () -> new ResourceNotFoundException("User with id " + userId + " not found!"));
+
+        return orders.stream().map(this::convertToDTO).toList();
     }
 
     /**
@@ -130,4 +136,8 @@ public class OrderServiceImpl implements OrderService {
 //    public DataResponseOrder updateOrder(CreateOrder order) {
 //        return null;
 //    }
+
+    private OrderDTO convertToDTO(Order order) {
+        return modelMapper.map(order, OrderDTO.class);
+    }
 }

@@ -4,12 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.evendot.warehouse.dto.OrderDTO;
 import ru.evendot.warehouse.exception.ResourceNotFoundException;
 import ru.evendot.warehouse.model.Order;
-import ru.evendot.warehouse.model.request.order.CreateOrder;
 import ru.evendot.warehouse.model.response.DataResponse;
-import ru.evendot.warehouse.model.response.order.DataResponseOrderFull;
-import ru.evendot.warehouse.model.response.order.DataResponseOrderList;
 import ru.evendot.warehouse.service.OrderService;
 
 import java.util.List;
@@ -30,26 +28,35 @@ public class OrderController {
         );
     }
 
-    @GetMapping("/order/{id}")
-    public ResponseEntity<DataResponse> getOrder(@PathVariable Long id) {
+    public ResponseEntity<DataResponse> getUserOrders(@PathVariable Long userId) {
         try {
-            Order order = orderService.getOrder(id);
+            List<OrderDTO> orders = orderService.getUserOrders(userId);
+            return ResponseEntity.ok(
+                    new DataResponse("Orders received successfully!", orders));
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DataResponse(
+                    "User with id " + userId + " not found", e.getMessage()));
+        }
+    }
+
+    @GetMapping("/order/{id}")
+    public ResponseEntity<DataResponse> getOrderById(@PathVariable Long id) {
+        try {
+            OrderDTO order = orderService.getOrder(id);
             return ResponseEntity.ok(
                     new DataResponse("Order received successfully!", order));
-        }
-        catch(ResourceNotFoundException e){
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DataResponse(
                     "Product with id " + id + " not found", e.getMessage()));
         }
     }
 
     @PostMapping("/order")
-    public ResponseEntity<DataResponse> createOrder(Long userId) {
-        try{
+    public ResponseEntity<DataResponse> createOrder(@PathVariable Long userId) {
+        try {
             Order order = orderService.placeOrder(userId);
             return ResponseEntity.ok(new DataResponse("Order created successfully!", order));
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new DataResponse("Error occurred!", e.getMessage()));
         }
 

@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -23,16 +24,13 @@ public class Order {
     private UUID uuid;
 
     @OneToMany(mappedBy = "order", orphanRemoval = true, cascade = CascadeType.ALL)
-    private Set<OrderItem> orderItems;
+    private Set<OrderItem> orderItems = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
 
     @Enumerated(EnumType.STRING)
     private PaymentStatus paymentStatus;
-
-//    @OneToMany(mappedBy = "pk.order")
-//    private List<OrderProduct> orderProducts = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "user_id")
