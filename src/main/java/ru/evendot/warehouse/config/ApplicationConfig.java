@@ -1,6 +1,7 @@
 package ru.evendot.warehouse.config;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,5 +27,10 @@ public class ApplicationConfig {
         initializer.setDataSource(dataSource);
         initializer.setDatabasePopulator(databasePopulator());
         return initializer;
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 }

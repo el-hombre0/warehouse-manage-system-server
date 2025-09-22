@@ -2,6 +2,7 @@ package ru.evendot.warehouse.service.impl;
 
 import com.fasterxml.uuid.Generators;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import ru.evendot.warehouse.dto.OrderDTO;
@@ -16,7 +17,7 @@ import java.util.HashSet;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepositoryImpl orderRepository;

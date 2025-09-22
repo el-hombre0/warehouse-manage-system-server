@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
                     user.setMiddlename(req.getMiddlename());
                     user.setPhoneNumber(req.getPhoneNumber());
                     user.setSocialMedia(req.getSocialMedia());
-                    user.setUserAddress(req.getUserAddress());
+                    user.setUserAddresses(req.getUserAddresses());
                     user.setEmail(req.getEmail());
                     user.setPassword(req.getPassword());
                     return userRepository.save(user);
@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
             existinguser.setFirstname(request.getFirstname());
             existinguser.setLastname(request.getLastname());
             existinguser.setMiddlename(request.getMiddlename());
-            existinguser.setUserAddress(request.getUserAddress());
+            existinguser.setUserAddresses(request.getUserAddresses());
             existinguser.setSocialMedia(request.getSocialMedia());
             return userRepository.save(existinguser);
         }).orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found!"));

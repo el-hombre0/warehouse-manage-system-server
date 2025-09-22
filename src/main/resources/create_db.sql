@@ -1,3 +1,4 @@
+-- Isn't used
 -- AI generated from ER-diagram image
 -- Таблица products
 CREATE TABLE products (

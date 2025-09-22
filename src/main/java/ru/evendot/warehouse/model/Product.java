@@ -1,7 +1,6 @@
 package ru.evendot.warehouse.model;
 
 import jakarta.persistence.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -41,8 +40,8 @@ public class Product {
 //    @JoinColumn(name = "category_id")
 //    private Category category;
 
-//    public Product(String title, Long article, String description, Double price, Boolean inStock, Integer sale, Timestamp timeInsert, Timestamp timeUpdate, int inventory, Category category) {
-public Product(String title, Long article, String description, Double price, Boolean inStock, Integer sale, Timestamp timeInsert, Timestamp timeUpdate, int inventory) {
+    //    public Product(String title, Long article, String description, Double price, Boolean inStock, Integer sale, Timestamp timeInsert, Timestamp timeUpdate, int inventory, Category category) {
+    public Product(String title, Long article, String description, Double price, Boolean inStock, Integer sale, Timestamp timeInsert, Timestamp timeUpdate, int inventory) {
         this.title = title;
         this.article = article;
         this.description = description;
