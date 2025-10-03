@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.evendot.warehouse.exception.ResourceAlreadyExistsException;
 import ru.evendot.warehouse.exception.ResourceNotFoundException;
+import ru.evendot.warehouse.model.User;
 import ru.evendot.warehouse.model.request.user.CreateUserRequest;
 import ru.evendot.warehouse.model.request.user.UserUpdateRequest;
 import ru.evendot.warehouse.model.response.DataResponse;
@@ -18,44 +19,48 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<DataResponse> getUser(@PathVariable Long userId){
+    public ResponseEntity<DataResponse> getUser(@PathVariable Long userId) {
         try {
-                return ResponseEntity.ok(
-                        new DataResponse("User received successfully!", userService.getUserById(userId))
-                );
-    }
-        catch (ResourceNotFoundException e){
+            User user = userService.getUserById(userId);
+            return ResponseEntity.ok(
+                    new DataResponse("User received successfully!", userService.convertUserToDTO(user))
+            );
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new DataResponse("User with id " + userId + " not found!", e));
         }
     }
 
     @PostMapping("/user")
-    public ResponseEntity<DataResponse> createUser(@RequestBody CreateUserRequest request){
+    public ResponseEntity<DataResponse> createUser(@RequestBody CreateUserRequest request) {
         try {
-            return ResponseEntity.ok(new DataResponse("User created successfully!", userService.createUser(request)));
+            User user = userService.createUser(request);
+            return ResponseEntity.ok(new DataResponse("User created successfully!",
+                    userService.convertUserToDTO(user)));
         } catch (ResourceAlreadyExistsException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new DataResponse("Error occurred!", null ));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new DataResponse("Error occurred!",
+                    null));
         }
     }
 
     @PutMapping("/user/{userId}")
-    public ResponseEntity<DataResponse> updateUser(@RequestParam UserUpdateRequest request, @PathVariable Long userId){
+    public ResponseEntity<DataResponse> updateUser(@RequestParam UserUpdateRequest request, @PathVariable Long userId) {
         try {
+            User user = userService.updateUser(request, userId);
             return ResponseEntity.ok(new DataResponse(
-                    "User updated successfully!", userService.updateUser(request, userId)));
+                    "User updated successfully!", userService.convertUserToDTO(user)));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new DataResponse("User with id " + userId + " not found!", null ));
+                    new DataResponse("User with id " + userId + " not found!", null));
         }
     }
 
     @DeleteMapping("/user/{userId}")
-    public ResponseEntity<DataResponse> deleteUser(@PathVariable Long userId){
+    public ResponseEntity<DataResponse> deleteUser(@PathVariable Long userId) {
         try {
             userService.deleteUser(userId);
             return ResponseEntity.ok(new DataResponse("User deleted successfully!", null));
-        } catch (ResourceNotFoundException e){
+        } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new DataResponse("User with id " + userId + " not found!", e));
         }

@@ -25,7 +25,7 @@ public class CartController {
     public ResponseEntity<DataResponse> getCart(@PathVariable Long cartId) {
         try {
             return ResponseEntity.ok(
-                    new DataResponse("Cert received successfully!", cartService.getCart(cartId)
+                    new DataResponse("Cart received successfully!", cartService.getCart(cartId)
                     )
             );
         } catch (ResourceNotFoundException e) {

@@ -1,7 +1,9 @@
 package ru.evendot.warehouse.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import ru.evendot.warehouse.dto.UserDTO;
 import ru.evendot.warehouse.exception.ResourceAlreadyExistsException;
 import ru.evendot.warehouse.exception.ResourceNotFoundException;
 import ru.evendot.warehouse.model.User;
@@ -17,6 +19,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public User getUserById(Long userId) {
@@ -59,5 +62,10 @@ public class UserServiceImpl implements UserService {
         userRepository.findById(userId).ifPresentOrElse(userRepository::delete, () -> {
             throw new ResourceNotFoundException("User with id " + userId + " not found!");
         });
+    }
+
+    @Override
+    public UserDTO convertUserToDTO(User user) {
+        return modelMapper.map(user, UserDTO.class);
     }
 }

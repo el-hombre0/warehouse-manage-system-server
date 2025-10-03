@@ -8,6 +8,12 @@ import lombok.NoArgsConstructor;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * TODO
+ * Request processing failed: org.springframework.dao.InvalidDataAccessApiUsageException:
+ * org.hibernate.TransientObjectException: persistent instance references an unsaved transient
+ * instance of 'ru.evendot.warehouse.model.Address' (save the transient instance before flushing)] with root cause
+ */
 @Data
 @Entity
 @AllArgsConstructor

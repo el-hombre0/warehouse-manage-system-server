@@ -1,5 +1,6 @@
 package ru.evendot.warehouse.service;
 
+import ru.evendot.warehouse.dto.UserDTO;
 import ru.evendot.warehouse.model.User;
 import ru.evendot.warehouse.model.request.user.CreateUserRequest;
 import ru.evendot.warehouse.model.request.user.UserUpdateRequest;
@@ -12,5 +13,7 @@ public interface UserService {
     User updateUser(UserUpdateRequest request, Long userId);
 
     void deleteUser(Long userId);
+
+    UserDTO convertUserToDTO(User user);
 
 }
