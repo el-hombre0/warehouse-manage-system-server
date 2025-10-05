@@ -18,7 +18,7 @@ import ru.evendot.warehouse.service.UserService;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/{userId}")
     public ResponseEntity<DataResponse> getUser(@PathVariable Long userId) {
         try {
             User user = userService.getUserById(userId);
@@ -27,11 +27,11 @@ public class UserController {
             );
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new DataResponse("User with id " + userId + " not found!", e));
+                    .body(new DataResponse("User with id " + userId + " not found!", e.getMessage()));
         }
     }
 
-    @PostMapping("/user")
+    @PostMapping("/")
     public ResponseEntity<DataResponse> createUser(@RequestBody CreateUserRequest request) {
         try {
             User user = userService.createUser(request);
@@ -43,7 +43,7 @@ public class UserController {
         }
     }
 
-    @PutMapping("/user/{userId}")
+    @PutMapping("/{userId}")
     public ResponseEntity<DataResponse> updateUser(@RequestParam UserUpdateRequest request, @PathVariable Long userId) {
         try {
             User user = userService.updateUser(request, userId);
@@ -55,7 +55,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/user/{userId}")
+    @DeleteMapping("/{userId}")
     public ResponseEntity<DataResponse> deleteUser(@PathVariable Long userId) {
         try {
             userService.deleteUser(userId);

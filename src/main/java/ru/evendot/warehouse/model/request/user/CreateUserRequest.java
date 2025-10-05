@@ -5,7 +5,6 @@ import org.hibernate.annotations.NaturalId;
 import ru.evendot.warehouse.model.Address;
 import ru.evendot.warehouse.model.UserSocialMedia;
 
-import java.util.Set;
 
 @Data
 public class CreateUserRequest {
@@ -19,5 +18,5 @@ public class CreateUserRequest {
     private String phoneNumber;
     private UserSocialMedia socialMedia;
     private String password;
-    private Set<Address> userAddresses;
+    private Address address;
 }

@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.NaturalId;
 
-import java.util.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -18,7 +18,9 @@ public class User {
     private String middlename;
     private String phoneNumber;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    //    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "social_media_id")
     private UserSocialMedia socialMedia;
 
     @NaturalId
@@ -31,9 +33,12 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Order> orders;
 
-    @ManyToMany
-    @JoinTable(name = "user_address",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "address_id"))
-    private Set<Address> userAddresses = new HashSet<>();
+    //    @ManyToMany(cascade = CascadeType.ALL)
+//    @JoinTable(name = "user_address",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "address_id"))
+//    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "address_id")
+    private Address address;
 }

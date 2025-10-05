@@ -2,7 +2,6 @@ package ru.evendot.warehouse.dto;
 
 import lombok.Data;
 import java.util.List;
-import java.util.Set;
 
 @Data
 public class UserDTO {
@@ -20,5 +19,5 @@ public class UserDTO {
 
     private List<OrderDTO> orders;
 
-    private Set<AddressDTO> userAddresses;
+    private AddressDTO address;
 }
