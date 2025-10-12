@@ -2,13 +2,18 @@ package ru.evendot.warehouse.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.evendot.warehouse.dto.CartDTO;
 import ru.evendot.warehouse.exception.ResourceNotFoundException;
 import ru.evendot.warehouse.model.Cart;
+import ru.evendot.warehouse.model.User;
 import ru.evendot.warehouse.repository.CartItemRepository;
 import ru.evendot.warehouse.repository.CartRepository;
 import ru.evendot.warehouse.service.CartService;
+
+import java.util.Optional;
 
 /**
  * Сервис работы с корзиной покупок
@@ -21,6 +26,7 @@ public class CartServiceImpl implements CartService {
     private final CartRepository cartRepo;
     private final CartItemRepository cartItemRepo;
 //    private final AtomicLong cartIdGenerator = new AtomicLong(0);
+    private final ModelMapper modelMapper;
 
     /**
      * Получение корзины
@@ -74,10 +80,21 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public Long initializeNewCart() {
-        Cart cart = new Cart();
+    public Cart initializeNewCart(User user) {
+        return Optional.ofNullable(getCartByUserId(user.getId()))
+                .orElseGet(() -> {
+                    Cart cart = new Cart();
+                    cart.setUser(user);
+                    return cartRepo.save(cart);
+                });
+//        Cart cart = new Cart();
 //        Long newCartId = cartIdGenerator.incrementAndGet();
 //        cart.setId(newCartId);
-        return cartRepo.save(cart).getId();
+//        return cartRepo.save(cart).getId();
+    }
+
+    @Override
+    public CartDTO convertToCartDTO(Cart cart){
+        return modelMapper.map(cart, CartDTO.class);
     }
 }

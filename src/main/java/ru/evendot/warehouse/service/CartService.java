@@ -1,6 +1,8 @@
 package ru.evendot.warehouse.service;
 
+import ru.evendot.warehouse.dto.CartDTO;
 import ru.evendot.warehouse.model.Cart;
+import ru.evendot.warehouse.model.User;
 
 public interface CartService {
     Cart getCart(Long id);
@@ -11,5 +13,7 @@ public interface CartService {
 
     Double getTotalPrice(Long id);
 
-    Long initializeNewCart();
+    Cart initializeNewCart(User user);
+
+    CartDTO convertToCartDTO(Cart cart);
 }

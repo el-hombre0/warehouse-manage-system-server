@@ -6,7 +6,7 @@ import ru.evendot.warehouse.model.Order;
 import java.util.List;
 
 public interface OrderService {
-    List<Order> getOrders();
+    List<OrderDTO> getOrders();
 
     OrderDTO getOrder(Long id);
 
@@ -14,6 +14,7 @@ public interface OrderService {
 
     Order placeOrder(Long userId);
 
+    OrderDTO convertToOrderDTO(Order order);
 
 //    void deleteById(Long id);
 

@@ -1,27 +1,15 @@
 package ru.evendot.warehouse.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.evendot.warehouse.model.Order;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface OrderRepository {
-    Optional<List<Order>> findAll();
+public interface OrderRepository extends JpaRepository<Order, Long> {
+    Order findByUuid(UUID uuid);
 
-    Order save(Order order);
-
-    Optional<Order> findByUUID(UUID uuid);
-
-    Optional<Order> findById(Long id);
-
-    Optional<List<Order>> findAllByUserId(Long userId);
-
-//    Boolean existsById(Long id);
-
-//    void deleteById(Long id);
-
-//    Optional<Long> updateById(Order order);
+    List<Order> findAllByUserId(Long userId);
 }

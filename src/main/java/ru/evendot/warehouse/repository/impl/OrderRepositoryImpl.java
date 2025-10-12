@@ -1,3 +1,4 @@
+/**
 package ru.evendot.warehouse.repository.impl;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -81,3 +82,4 @@ public class OrderRepositoryImpl implements OrderRepository {
 //        return Optional.empty();
 //    }
 }
+ */

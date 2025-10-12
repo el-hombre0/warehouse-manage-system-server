@@ -1,14 +1,13 @@
 package ru.evendot.warehouse.service.impl;
 
 import com.fasterxml.uuid.Generators;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import ru.evendot.warehouse.dto.OrderDTO;
 import ru.evendot.warehouse.exception.ResourceNotFoundException;
 import ru.evendot.warehouse.model.*;
-import ru.evendot.warehouse.repository.impl.OrderRepositoryImpl;
+import ru.evendot.warehouse.repository.OrderRepository;
 import ru.evendot.warehouse.repository.impl.ProductRepositoryImpl;
 import ru.evendot.warehouse.service.OrderService;
 
@@ -20,28 +19,27 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
-    private final OrderRepositoryImpl orderRepository;
+    private final OrderRepository orderRepository;
     private final ProductRepositoryImpl productRepository;
     private final CartServiceImpl cartService;
     private final ModelMapper modelMapper;
 
     @Override
-    public List<Order> getOrders() {
-        return orderRepository.findAll().orElseThrow();
+    public List<OrderDTO> getOrders() {
+        List<Order> foundOrders = orderRepository.findAll();
+        return foundOrders.stream().map(this::convertToOrderDTO).toList();
     }
 
     @Override
     public OrderDTO getOrder(Long id) {
-        return orderRepository.findById(id).map(this::convertToDTO).orElseThrow(
-                () -> new ResourceNotFoundException("Order with id:" + id.toString() + " doesn't exist."));
+        return orderRepository.findById(id).map(this::convertToOrderDTO).orElseThrow(
+                () -> new ResourceNotFoundException("Order with id:" + id + " doesn't exist."));
     }
 
     @Override
     public List<OrderDTO> getUserOrders(Long userId) {
-        List<Order> orders = orderRepository.findAllByUserId(userId).orElseThrow(
-                () -> new ResourceNotFoundException("User with id " + userId + " not found!"));
-
-        return orders.stream().map(this::convertToDTO).toList();
+        List<Order> orders = orderRepository.findAllByUserId(userId);
+        return orders.stream().map(this::convertToOrderDTO).toList();
     }
 
     /**
@@ -103,6 +101,7 @@ public class OrderServiceImpl implements OrderService {
     private List<OrderItem> createOrderItems(Order order, Cart cart) {
         return cart.getCartItems().stream().map(cartItem -> {
             Product product = cartItem.getProduct();
+            //TODO make an in stock products amount checking
             product.setInventory(product.getInventory() - cartItem.getQuantity());
             productRepository.save(product);
             return new OrderItem(order, product, cartItem.getQuantity(), cartItem.getUnitPrice());
@@ -120,11 +119,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
 //    @Override
-//    public Long save(CreateOrder order) throws CustomException {
-//        return 0L;
-//    }
-
-//    @Override
 //    public void deleteById(Long id) {
 //        if (orderRepositoryImpl.existsById(id)) {
 //            orderRepositoryImpl.deleteById(id);
@@ -133,12 +127,8 @@ public class OrderServiceImpl implements OrderService {
 //        }
 //    }
 
-//    @Override
-//    public DataResponseOrder updateOrder(CreateOrder order) {
-//        return null;
-//    }
-
-    private OrderDTO convertToDTO(Order order) {
+    @Override
+    public OrderDTO convertToOrderDTO(Order order) {
         return modelMapper.map(order, OrderDTO.class);
     }
 }

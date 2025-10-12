@@ -5,9 +5,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.evendot.warehouse.exception.ResourceNotFoundException;
+import ru.evendot.warehouse.model.Cart;
+import ru.evendot.warehouse.model.User;
 import ru.evendot.warehouse.model.response.DataResponse;
 import ru.evendot.warehouse.service.CartItemService;
 import ru.evendot.warehouse.service.CartService;
+import ru.evendot.warehouse.service.UserService;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,28 +18,28 @@ import ru.evendot.warehouse.service.CartService;
 public class CartItemController {
     private final CartItemService cartItemService;
     private final CartService cartService;
+    private final UserService userService;
 
     /**
      * Добавление товара в корзину
      *
-     * @param cartId    ID корзины
      * @param productId ID товара
      * @param quantity  Кол-во товаров
      * @return Сообщение о добавлении товара в корзину или об ошибке поиска корзины
      */
     @PostMapping("/add")
-    public ResponseEntity<DataResponse> addItemToCart(@RequestParam(required = false) Long cartId,
-                                                      @RequestParam Long productId,
-                                                      @RequestParam Integer quantity) {
+    public ResponseEntity<DataResponse> addItemToCart(
+            @RequestParam Long productId,
+            @RequestParam Integer quantity) {
         try {
-            if (cartId == null) { // Если корзина изначально пустая (не существует)
-                cartId = cartService.initializeNewCart();
-            }
-            cartItemService.addItemToCart(cartId, productId, quantity);
-            return ResponseEntity.ok(new DataResponse("Item added to cart!", null));
+            //TODO User 1 For testing purposes
+            User user = userService.getUserById(1L);
+            Cart cart = cartService.initializeNewCart(user);
+            cartItemService.addItemToCart(cart.getId(), productId, quantity);
+            return ResponseEntity.ok(new DataResponse("Item added to cart!", cartService.convertToCartDTO(cart)));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new DataResponse(
-                    "Cart with id " + cartId + " not found", e.getMessage()));
+                    "Error while adding item to cart!", e.getMessage()));
         }
     }
 

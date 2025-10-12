@@ -1,21 +1,18 @@
 package ru.evendot.warehouse.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import ru.evendot.warehouse.dto.CartItemDTO;
 import ru.evendot.warehouse.exception.ResourceNotFoundException;
 import ru.evendot.warehouse.model.Cart;
 import ru.evendot.warehouse.model.CartItem;
 import ru.evendot.warehouse.model.Product;
 import ru.evendot.warehouse.repository.CartItemRepository;
 import ru.evendot.warehouse.repository.CartRepository;
-//import ru.evendot.warehouse.repository.impl.CartItemRepositoryImpl;
-//import ru.evendot.warehouse.repository.impl.CartRepositoryImpl;
 import ru.evendot.warehouse.service.CartItemService;
 import ru.evendot.warehouse.service.CartService;
 import ru.evendot.warehouse.service.ProductService;
-
-import java.util.HashSet;
-import java.util.Optional;
 
 /**
  * Реализация элемента корзины покупок
@@ -23,12 +20,11 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class CartItemServiceImpl implements CartItemService {
-//    private final CartItemRepositoryImpl cartItemRepo;
     private final CartItemRepository cartItemRepo;
-//    private final CartRepositoryImpl cartRepo;
     private final CartRepository cartRepo;
     private final ProductService productService;
     private final CartService cartService;
+    private final ModelMapper modelMapper;
 
     /**
      * Добавление товара в корзину
@@ -111,5 +107,10 @@ public class CartItemServiceImpl implements CartItemService {
                 .stream()
                 .filter(item -> item.getProduct().getId().equals(productId))
                 .findFirst().orElseThrow(() -> new ResourceNotFoundException("Item not found!"));
+    }
+
+    @Override
+    public CartItemDTO convertToCartItemDTO(CartItem cartItem) {
+        return modelMapper.map(cartItem, CartItemDTO.class);
     }
 }

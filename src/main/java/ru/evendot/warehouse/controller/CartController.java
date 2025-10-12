@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.evendot.warehouse.exception.ResourceNotFoundException;
+import ru.evendot.warehouse.model.Cart;
 import ru.evendot.warehouse.model.response.DataResponse;
 import ru.evendot.warehouse.service.CartService;
 
@@ -24,8 +25,9 @@ public class CartController {
     @GetMapping("/{cartId}")
     public ResponseEntity<DataResponse> getCart(@PathVariable Long cartId) {
         try {
+            Cart cart = cartService.getCart(cartId);
             return ResponseEntity.ok(
-                    new DataResponse("Cart received successfully!", cartService.getCart(cartId)
+                    new DataResponse("Cart received successfully!", cartService.convertToCartDTO(cart)
                     )
             );
         } catch (ResourceNotFoundException e) {

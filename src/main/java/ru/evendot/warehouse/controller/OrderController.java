@@ -20,15 +20,16 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @GetMapping("/order")
+    @GetMapping("/all")
     public ResponseEntity<DataResponse> getAllOrders() {
-        List<Order> orders = orderService.getOrders();
+        List<OrderDTO> orders = orderService.getOrders();
         return ResponseEntity.ok(
                 new DataResponse("Orders received successfully!", orders)
         );
     }
 
-    public ResponseEntity<DataResponse> getUserOrders(@PathVariable Long userId) {
+    @GetMapping("/order/user")
+    public ResponseEntity<DataResponse> getUserOrders(@RequestParam Long userId) {
         try {
             List<OrderDTO> orders = orderService.getUserOrders(userId);
             return ResponseEntity.ok(
@@ -39,8 +40,8 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/order/{id}")
-    public ResponseEntity<DataResponse> getOrderById(@PathVariable Long id) {
+    @GetMapping("/order")
+    public ResponseEntity<DataResponse> getOrderById(@RequestParam Long id) {
         try {
             OrderDTO order = orderService.getOrder(id);
             return ResponseEntity.ok(
@@ -52,12 +53,15 @@ public class OrderController {
     }
 
     @PostMapping("/order")
-    public ResponseEntity<DataResponse> createOrder(@PathVariable Long userId) {
+    public ResponseEntity<DataResponse> createOrder(@RequestParam Long userId) {
         try {
             Order order = orderService.placeOrder(userId);
-            return ResponseEntity.ok(new DataResponse("Order created successfully!", order));
+            return ResponseEntity.ok(new DataResponse("Order created successfully!",
+                    orderService.convertToOrderDTO(order)));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new DataResponse("Error occurred!", e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new DataResponse("Error occurred!", e.getMessage())
+            );
         }
 
     }

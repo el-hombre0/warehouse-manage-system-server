@@ -18,9 +18,4 @@ public class ProductDTO {
     private Integer sale;
     private Timestamp timeInsert;
     private Timestamp timeUpdate;
-
-    /**
-     * Количество товара в наличии
-     */
-    private int inventory;
 }

@@ -1,10 +1,11 @@
-package ru.evendot.warehouse;
+package ru.evendot.warehouse.RegressTests;
 
 import jdk.jfr.Description;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.evendot.warehouse.BaseTest;
 import ru.evendot.warehouse.api.response.product.CreateProductResponse;
 import ru.evendot.warehouse.api.response.product.GetProductResponse;
 import ru.evendot.warehouse.enums.StringConst;
