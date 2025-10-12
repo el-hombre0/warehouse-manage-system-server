@@ -56,8 +56,9 @@ public class OrderController {
     public ResponseEntity<DataResponse> createOrder(@RequestParam Long userId) {
         try {
             Order order = orderService.placeOrder(userId);
+            OrderDTO orderDTO = orderService.convertToOrderDTO(order);
             return ResponseEntity.ok(new DataResponse("Order created successfully!",
-                    orderService.convertToOrderDTO(order)));
+                    orderDTO));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                     new DataResponse("Error occurred!", e.getMessage())
