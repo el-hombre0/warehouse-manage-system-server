@@ -38,6 +38,8 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	// Source: https://mvnrepository.com/artifact/org.modelmapper/modelmapper
 	implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.2.6'
+	// Source: https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka
+	implementation group: 'org.springframework.kafka', name: 'spring-kafka', version: '4.1.0-M2'
 }
 
 tasks.named('test') {

@@ -14,6 +14,8 @@ public class UserDTO {
 
     private String email;
 
+    private String jwt;
+
 //    private CartDTO cart;
 
 //    private List<OrderDTO> orders;

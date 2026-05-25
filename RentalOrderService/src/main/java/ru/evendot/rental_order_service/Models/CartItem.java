@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @Data
@@ -35,6 +37,10 @@ public class CartItem {
 //    @JoinColumn(name = "product_id")
 //    private Product product;
     private Long productId;
+
+    private LocalDateTime selectedStartDate;
+
+    private LocalDateTime selectedEndDate;
 
     @JsonIgnore
     @ManyToOne(cascade = CascadeType.ALL)

@@ -6,8 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.evendot.userservice.Exceptions.ResourceAlreadyExistsException;
 import ru.evendot.userservice.Exceptions.ResourceNotFoundException;
+import ru.evendot.userservice.Models.Requests.AuthenticateUserRequest;
 import ru.evendot.userservice.Models.Requests.CreateUserRequest;
 import ru.evendot.userservice.Models.Requests.UserUpdateRequest;
+import ru.evendot.userservice.Models.Responses.AuthenticationResponse;
 import ru.evendot.userservice.Models.Responses.DataResponse;
 import ru.evendot.userservice.Models.User;
 import ru.evendot.userservice.Services.UserService;
@@ -41,6 +43,16 @@ public class UserController {
         } catch (ResourceAlreadyExistsException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new DataResponse("Error occurred!",
                     null));
+        }
+    }
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<DataResponse> authenticateUser(@RequestBody AuthenticateUserRequest request){
+        try {
+            return ResponseEntity.ok(new DataResponse("User authenticated successfully!",
+                    new AuthenticationResponse(userService.authenticateUser(request))));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 

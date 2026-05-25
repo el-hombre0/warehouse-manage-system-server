@@ -3,7 +3,6 @@ spring:
     name: UsersService
   datasource:
     url: jdbc:postgresql://127.0.0.1:5432/usersdb
-  #url: jdbc:postgresql://quirky_brahmagupta:5432/eldelivery
     username: postgres
     password: password
 
@@ -14,3 +13,5 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  kafka:
+    bootstrap-servers: localhost:9092

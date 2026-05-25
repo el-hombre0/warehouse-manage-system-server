@@ -3,7 +3,11 @@ package ru.evendot.rental_order_service.Services.Impl;
 import com.fasterxml.uuid.Generators;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.evendot.rental_order_service.Broker.Events.Rental.RentalConfirmedEvent;
+import ru.evendot.rental_order_service.Broker.Events.Rental.RentalStartedEvent;
+import ru.evendot.rental_order_service.Broker.Producers.RentalEventProducer;
 import ru.evendot.rental_order_service.DTOs.OrderDTO;
 import ru.evendot.rental_order_service.DTOs.Product.ProductDTO;
 import ru.evendot.rental_order_service.Exceptions.ResourceNotFoundException;
@@ -25,6 +29,9 @@ public class OrderServiceImpl implements OrderService {
     private final CartServiceImpl cartService;
     private final ProductDTOServiceImpl productDTOService;
     private final ModelMapper modelMapper;
+
+    @Autowired
+    private RentalEventProducer rentalEventProducer;
 
     @Override
     public List<OrderDTO> getOrders() {
@@ -70,6 +77,8 @@ public class OrderServiceImpl implements OrderService {
         Order savedOrder = orderRepository.save(order);
 
         cartService.clearCart(cart.getId());
+        rentalEventProducer.sendRentalConfirmed(new RentalConfirmedEvent(order.getId(), order.getTotalAmount()));
+        rentalEventProducer.sendRentalStarted(new RentalStartedEvent());
         return savedOrder;
     }
 
