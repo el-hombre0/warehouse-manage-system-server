@@ -37,13 +37,13 @@ public class Product {
      */
     private int inventory;
 
-//    @ManyToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "category_id")
-//    private Category category;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "category_id")
+    private Category category;
 
-    //    public Product(String title, Long article, String description, Double price, Boolean inStock, Integer sale, Timestamp timeInsert, Timestamp timeUpdate, int inventory, Category category) {
-    public Product(String title, Long article, String description, Double price, List<Image> images, Boolean inStock,
-                   Integer sale, Timestamp timeInsert, Timestamp timeUpdate, int inventory) {
+        public Product(String title, Long article, String description, Double price, Boolean inStock, Integer sale, Timestamp timeInsert, Timestamp timeUpdate, int inventory, Category category) {
+//    public Product(String title, Long article, String description, Double price, List<Image> images, Boolean inStock,
+//                   Integer sale, Timestamp timeInsert, Timestamp timeUpdate, int inventory) {
         this.title = title;
         this.article = article;
         this.description = description;
@@ -54,6 +54,6 @@ public class Product {
         this.timeInsert = timeInsert;
         this.timeUpdate = timeUpdate;
         this.inventory = inventory;
-//        this.category = category;
+        this.category = category;
     }
 }

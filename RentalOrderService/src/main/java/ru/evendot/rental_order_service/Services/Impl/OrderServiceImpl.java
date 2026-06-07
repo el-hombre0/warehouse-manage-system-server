@@ -5,10 +5,12 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.evendot.rental_order_service.Broker.Events.Cart.CartRetrievedEvent;
 import ru.evendot.rental_order_service.Broker.Events.Rental.RentalConfirmedEvent;
 import ru.evendot.rental_order_service.Broker.Events.Rental.RentalStartedEvent;
 import ru.evendot.rental_order_service.Broker.Producers.RentalEventProducer;
 import ru.evendot.rental_order_service.DTOs.OrderDTO;
+import ru.evendot.rental_order_service.DTOs.OrderItemDTO;
 import ru.evendot.rental_order_service.DTOs.Product.ProductDTO;
 import ru.evendot.rental_order_service.Exceptions.ResourceNotFoundException;
 import ru.evendot.rental_order_service.Models.*;
@@ -19,6 +21,8 @@ import ru.evendot.rental_order_service.Services.OrderService;
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.List;
+import java.time.LocalDateTime;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +30,7 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
 //    private final ProductRepositoryImpl productRepository;
+    private final CartItemServiceImpl cartItemService;
     private final CartServiceImpl cartService;
     private final ProductDTOServiceImpl productDTOService;
     private final ModelMapper modelMapper;
@@ -77,8 +82,24 @@ public class OrderServiceImpl implements OrderService {
         Order savedOrder = orderRepository.save(order);
 
         cartService.clearCart(cart.getId());
-        rentalEventProducer.sendRentalConfirmed(new RentalConfirmedEvent(order.getId(), order.getTotalAmount()));
-        rentalEventProducer.sendRentalStarted(new RentalStartedEvent());
+//        rentalEventProducer.sendRentalConfirmed(new RentalConfirmedEvent(order.getId(), order.getTotalAmount()));
+        rentalEventProducer.sendRentalStarted(RentalStartedEvent
+                .builder()
+                .rentalId(order.getId().toString())
+                        .customerId(order.getUserId().toString())
+                        .actualStartDate(order.getStartDateTime())
+                        .plannedEndDate(order.getPlannedEndDateTime())
+                        .issuedEquipment(order.getOrderItems().stream().map(this::convertToOrderItemDTO).collect(Collectors.toSet()))
+                        .issuedBy(order.getIssuedByUserId().toString())
+                        .issueLocation(order.getRentalPointId().toString())
+                        .customerSignatureRequired(true)
+                        .customerSignedAt(LocalDateTime.now().minusMinutes(10L))
+                        .signatureStatus(RentalStartedEvent.SignatureStatus.SIGNED)
+                        .checklistCompleted(true)
+                        .issueComment("")
+                        .sourceChannel(CartRetrievedEvent.SourceChannel.WEB)
+                        .build()
+        );
         return savedOrder;
     }
 
@@ -146,5 +167,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public OrderDTO convertToOrderDTO(Order order) {
         return modelMapper.map(order, OrderDTO.class);
+    }
+
+    @Override
+    public OrderItemDTO convertToOrderItemDTO(OrderItem orderItem) {
+        return modelMapper.map(orderItem, OrderItemDTO.class);
     }
 }

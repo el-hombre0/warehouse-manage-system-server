@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -39,6 +40,8 @@ public class Order {
 //    private User user;
     private Long userId;
 
+    private Long issuedByUserId;
+
     private String comment;
     private Timestamp timeCreation;
 
@@ -49,4 +52,9 @@ public class Order {
 //    @JoinColumn(name = "address_id")
 //    private Address address;
     private Long rentalPointId;
+
+    private LocalDateTime startDateTime;
+    private LocalDateTime plannedEndDateTime;
+    private LocalDateTime actualEndDateTime;
+
 }
